@@ -18,6 +18,38 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
+            <android.support.v7.widget.SwitchCompat
+                android:layout_marginRight="16dp"
+                android:layout_alignParentRight="true"
+                android:id="@+id/switchEnableTrade"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enable Trade" />
+
+            <LinearLayout
+                android:layout_alignParentLeft="true"
+                android:gravity="center"
+                android:layout_toLeftOf="@+id/switchEnableTrade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:entries="@array/providers"
+                    android:id="@+id/spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/content_main" />
