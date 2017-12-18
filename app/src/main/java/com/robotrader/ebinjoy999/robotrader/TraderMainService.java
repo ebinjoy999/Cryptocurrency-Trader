@@ -2,8 +2,14 @@ package com.robotrader.ebinjoy999.robotrader;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Process;
 import android.util.Log;
+import android.widget.Toast;
 
 public class TraderMainService extends Service {
     final String TAG = "TraderMainService";
@@ -23,29 +29,89 @@ public class TraderMainService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(TAG,"onStart called");
+        Log.e(TAG,"onCreate called");
+        // Start up the thread running the service.  Note that we create a
+        // separate thread because the service normally runs in the process's
+        // main thread, which we don't want to block.  We also make it
+        // background priority so CPU-intensive work will not disrupt our UI.
+        HandlerThread thread = new HandlerThread("ServiceStartArguments",
+                Process.THREAD_PRIORITY_BACKGROUND );
+        thread.start();
+
+        // Get the HandlerThread's Looper and use it for our Handler
+        mServiceLooper = thread.getLooper();
+        mServiceHandler = new ServiceHandler(mServiceLooper);
     }
 
 
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+//        throw new UnsupportedOperationException("Not yet implemented");
+    return null; //Don't provide binding.
     }
 
 
+    private Looper mServiceLooper;
+    private ServiceHandler mServiceHandler;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG,"onStartCommand called");
+        Toast.makeText(this, "Initializing service", Toast.LENGTH_LONG).show();
+        // For each start request, send a message to start a job and deliver the
+        // start ID so we know which request we're stopping when we finish the job
+        Message msg = mServiceHandler.obtainMessage();
+        msg.arg1 = startId;
+        mServiceHandler.sendMessage(msg);
 
-
-
-        return super.onStartCommand(intent, flags, startId);
+//        return super.onStartCommand(intent, flags, startId);
+    return START_STICKY;
+      /**  If the system kills the service after onStartCommand() returns, recreate the service and call onStartCommand(),
+            but do not redeliver the last intent. Instead, the system calls onStartCommand() with a null intent
+        unless there are pending intents to start the service. In that case, those intents are delivered.
+        This is suitable for media players (or similar services)
+        that are not executing commands but are running indefinitely and waiting for a job.**/
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        stopSelf();
+        mServiceHandler = null;
         Log.e(TAG,"onDestroy called");
     }
+
+
+
+
+    // Handler that receives messages from the thread
+    private final class ServiceHandler extends Handler {
+        public ServiceHandler(Looper looper) {
+            super(looper);
+        }
+        @Override
+        public void handleMessage(Message msg) {
+            // Normally we would do some work here, like download a file.
+            // For our sample, we just sleep for 5 seconds.
+
+            while (TraderMainService.this.mServiceHandler != null) {
+
+                try {
+                    Thread.sleep(2000);
+                    Log.e(TAG,"Running...");
+                } catch (InterruptedException e) {
+                    // Restore interrupt status.
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+
+
+            // Stop the service using the startId, so that we don't stop
+            // the service in the middle of handling another job
+            stopSelf(msg.arg1);
+        }
+    }
+
 }

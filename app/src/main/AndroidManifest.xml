@@ -20,8 +20,9 @@
             </intent-filter>
         </activity>
 
+        <!--android:description="Service used by RoboTrader app to perform trading. Caution! if you stop this may leads to crypto loss, Ebin Joy "-->
+
         <service
-            android:description="Service used by RoboTrader app to perform trading. Caution! if you stop this may leads to crypto loss, Ebin Joy "
             android:name=".TraderMainService"
             android:enabled="true"
             android:exported="false"></service>
