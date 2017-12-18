@@ -1,6 +1,10 @@
 package com.robotrader.ebinjoy999.robotrader;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -8,6 +12,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Process;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -64,6 +69,7 @@ public class TraderMainService extends Service {
          msg = mServiceHandler.obtainMessage();
         msg.arg1 = startId;
         mServiceHandler.sendMessage(msg);
+        showNotification();
 
 //        return super.onStartCommand(intent, flags, startId);
     return START_STICKY;
@@ -74,10 +80,30 @@ public class TraderMainService extends Service {
         that are not executing commands but are running indefinitely and waiting for a job.**/
     }
 
+    int notification_id = 10005;
+    private void showNotification() {
+        NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher_round) // notification icon
+                .setContentTitle("TraderRobo!") // title for notification
+                .setContentText("Caution trading is automated, please do a manual check.") // message for notification
+                .setPriority(Notification.PRIORITY_MAX)
+                .setOngoing(true)
+                .setAutoCancel(false); // clear notification after click
+//        Intent intent = new Intent(this, MainActivity.class);
+//        PendingIntent pi = PendingIntent.getActivity(this,0,intent,Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        mBuilder.setContentIntent(pi);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(notification_id, mBuilder.build());
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         Toast.makeText(this, "Disconnecting Robo...", Toast.LENGTH_LONG).show();
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(notification_id);
         stopSelf();
         mServiceHandler = null;
         Log.e(TAG,"onDestroy called");
