@@ -54,13 +54,14 @@ public class TraderMainService extends Service {
 
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
+    Message msg;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG,"onStartCommand called");
-        Toast.makeText(this, "Initializing service", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, msg==null? "Initializing Robo..." : "Connecting to Robo...", Toast.LENGTH_LONG).show();
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
-        Message msg = mServiceHandler.obtainMessage();
+         msg = mServiceHandler.obtainMessage();
         msg.arg1 = startId;
         mServiceHandler.sendMessage(msg);
 
@@ -76,7 +77,7 @@ public class TraderMainService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        Toast.makeText(this, "Disconnecting Robo...", Toast.LENGTH_LONG).show();
         stopSelf();
         mServiceHandler = null;
         Log.e(TAG,"onDestroy called");
