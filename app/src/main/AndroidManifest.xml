@@ -23,7 +23,7 @@
         <!--android:description="Service used by RoboTrader app to perform trading. Caution! if you stop this may leads to crypto loss, Ebin Joy "-->
 
         <service
-            android:name=".TraderMainService"
+            android:name=".service.TraderMainService"
             android:enabled="true"
             android:exported="false"></service>
     </application>

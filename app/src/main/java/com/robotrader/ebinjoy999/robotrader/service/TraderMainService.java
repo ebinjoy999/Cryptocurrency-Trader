@@ -1,8 +1,7 @@
-package com.robotrader.ebinjoy999.robotrader;
+package com.robotrader.ebinjoy999.robotrader.service;
 
 import android.app.Notification;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +15,16 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.robotrader.ebinjoy999.robotrader.R;
+
 public class TraderMainService extends Service {
     final String TAG = "TraderMainService";
+
+    private Looper mServiceLooper;
+    private ServiceHandler mServiceHandler;
+    Message msg;
+
+    CustomNotificationManager customNotificationManager;
 
   /**  If a component starts the service by calling startService() (which results in a call to onStartCommand()),
     the service continues to run until it stops itself with stopSelf() or another component stops
@@ -46,6 +53,7 @@ public class TraderMainService extends Service {
         // Get the HandlerThread's Looper and use it for our Handler
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
+        customNotificationManager = new CustomNotificationManager(this);
     }
 
 
@@ -57,9 +65,6 @@ public class TraderMainService extends Service {
     }
 
 
-    private Looper mServiceLooper;
-    private ServiceHandler mServiceHandler;
-    Message msg;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG,"onStartCommand called");
@@ -80,22 +85,8 @@ public class TraderMainService extends Service {
         that are not executing commands but are running indefinitely and waiting for a job.**/
     }
 
-    int notification_id = 10005;
-    private void showNotification() {
-        NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher_round) // notification icon
-                .setContentTitle("TraderRobo!") // title for notification
-                .setContentText("Caution trading is automated, please do a manual check.") // message for notification
-                .setPriority(Notification.PRIORITY_MAX)
-                .setOngoing(true)
-                .setAutoCancel(false); // clear notification after click
-//        Intent intent = new Intent(this, MainActivity.class);
-//        PendingIntent pi = PendingIntent.getActivity(this,0,intent,Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        mBuilder.setContentIntent(pi);
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(notification_id, mBuilder.build());
-    }
+
+
 
     @Override
     public void onDestroy() {
@@ -103,7 +94,7 @@ public class TraderMainService extends Service {
         Toast.makeText(this, "Disconnecting Robo...", Toast.LENGTH_LONG).show();
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.cancel(notification_id);
+        mNotificationManager.cancel(CustomNotificationManager.NOTIFICATION_ID_SERVICE_RUNNER);
         stopSelf();
         mServiceHandler = null;
         Log.e(TAG,"onDestroy called");
