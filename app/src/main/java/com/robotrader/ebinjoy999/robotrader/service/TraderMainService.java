@@ -25,6 +25,7 @@ public class TraderMainService extends Service {
     Message msg;
 
     CustomNotificationManager customNotificationManager;
+    MarketTickerWatcher marketTickerWatcher;
 
   /**  If a component starts the service by calling startService() (which results in a call to onStartCommand()),
     the service continues to run until it stops itself with stopSelf() or another component stops
@@ -54,6 +55,7 @@ public class TraderMainService extends Service {
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
         customNotificationManager = new CustomNotificationManager(this);
+        marketTickerWatcher = new MarketTickerWatcher(this);
     }
 
 
@@ -116,6 +118,7 @@ public class TraderMainService extends Service {
             while (TraderMainService.this.mServiceHandler != null) {
 
                 try {
+
                     Thread.sleep(2000);
                     Log.e(TAG,"Running...");
                 } catch (InterruptedException e) {

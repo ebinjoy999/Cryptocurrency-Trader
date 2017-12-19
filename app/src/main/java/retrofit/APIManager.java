@@ -16,7 +16,7 @@ Context ct;
 ApiInterface apiService;
 
 public APIManager(TClass classCallBack, Context ct){
-    this.interfaceAPIManager = (InterfaceAPIManager) classCallBack;
+    if(classCallBack!=null) this.interfaceAPIManager = (InterfaceAPIManager) classCallBack;
     this.ct =  ct;
     apiService = ApiClient.getClient(ct).create(ApiInterface.class);
 }

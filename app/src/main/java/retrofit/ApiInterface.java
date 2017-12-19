@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @GET("/symbols_details")
+    @GET("symbols_details")
     Call<List<String>> getSymbols();
 
 //    //delete a checkin
