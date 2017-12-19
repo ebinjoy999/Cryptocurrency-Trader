@@ -2,16 +2,9 @@ package retrofit;
 
 import android.content.Context;
 
-import com.rubysoftware.listCheckin.R;
-
-import java.io.IOException;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
+import com.robotrader.ebinjoy999.robotrader.CustomSharedPreference;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import tools.UserDetail;
 
 /**
  * Created by rmedls177lt on 2/9/16.
@@ -48,8 +41,8 @@ public class ApiClient {
 //        });
 
         if (retrofit==null) {
-            UserDetail mUserDetails = UserDetail.getInstance(ct);
-             final String BASE_URL = "http://"+mUserDetails.getSUB_DOMAIN()+ct.getString(R.string.BASE_URL_SECTION);
+            CustomSharedPreference mUserDetails = CustomSharedPreference.getInstance(ct);
+             final String BASE_URL = mUserDetails.getBaseUrl();
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
 //                    .client(httpClient.build())

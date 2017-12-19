@@ -52,7 +52,7 @@ public class CustomSharedPreference {
     sharedEditor = preferences.edit();
     EMP_NAME = preferences.getString(Keys.EMP_NAME, "");
     EMAIL = preferences.getString(Keys.EMAIL, "");
-    BASE_URL = preferences.getString(Keys.BASE_URL, "https://api.bitfinex.com/v2");
+    BASE_URL = preferences.getString(Keys.BASE_URL, "https://api.bitfinex.com/v1");
   }
 
 
