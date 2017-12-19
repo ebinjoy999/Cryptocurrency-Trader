@@ -74,7 +74,7 @@ public class TraderMainService extends Service {
          msg = mServiceHandler.obtainMessage();
         msg.arg1 = startId;
         mServiceHandler.sendMessage(msg);
-        showNotification();
+        customNotificationManager.showNotification(CustomNotificationManager.NOTIFICATION_ID_SERVICE_RUNNER);
 
 //        return super.onStartCommand(intent, flags, startId);
     return START_STICKY;

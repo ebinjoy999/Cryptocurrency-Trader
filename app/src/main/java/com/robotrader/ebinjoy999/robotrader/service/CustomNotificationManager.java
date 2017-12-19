@@ -17,14 +17,14 @@ public class CustomNotificationManager {
        this.context = context;
    }
 
-    private void showNotification() {
+    public void showNotification(int NOTIFICATION_ID) {
         NotificationCompat.Builder mBuilder =  buildNotification();
 //        Intent intent = new Intent(this, MainActivity.class);
 //        PendingIntent pi = PendingIntent.getActivity(this,0,intent,Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        mBuilder.setContentIntent(pi);
         android.app.NotificationManager mNotificationManager =
                 (android.app.NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID_SERVICE_RUNNER, mBuilder.build());
+        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
     }
 
     private NotificationCompat.Builder buildNotification() {
