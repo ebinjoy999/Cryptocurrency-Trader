@@ -70,7 +70,7 @@ public class TraderMainService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG,"onStartCommand called");
-        Toast.makeText(this, msg==null? "Initializing Robo..." : "Connecting to Robo...", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, msg==null? "Initializing Robo..." : "Connecting to Robo...", Toast.LENGTH_SHORT).show();
         // For each start request, send a message to start a job and deliver the
         // start ID so we know which request we're stopping when we finish the job
          msg = mServiceHandler.obtainMessage();
@@ -93,7 +93,7 @@ public class TraderMainService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Toast.makeText(this, "Disconnecting Robo...", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Disconnecting Robo...", Toast.LENGTH_SHORT).show();
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancel(CustomNotificationManager.NOTIFICATION_ID_SERVICE_RUNNER);

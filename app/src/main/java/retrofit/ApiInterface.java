@@ -1,5 +1,7 @@
 package retrofit;
 
+import com.robotrader.ebinjoy999.robotrader.model.Symbol;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,8 +14,12 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @GET("symbols_details")
-    Call<List<String>> getSymbols();
+    @GET("v1/symbols_details")
+    Call<List<Symbol>> getSymbols();
+
+
+    @GET("v2/tickers")
+    Call<List<Symbol>> getTickers(@Query("symbols") String symbols);
 
 //    //delete a checkin
 //    @DELETE("checkins/{id}")
