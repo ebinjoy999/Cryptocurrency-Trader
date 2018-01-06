@@ -14,7 +14,7 @@ public class Symbol {
     private String pair;
     @SerializedName("price_precision")
     @Expose
-    private Integer pricePrecision;
+    private Double pricePrecision;
     @SerializedName("initial_margin")
     @Expose
     private String initialMargin;
@@ -39,11 +39,11 @@ public class Symbol {
         this.pair = pair;
     }
 
-    public Integer getPricePrecision() {
+    public Double getPricePrecision() {
         return pricePrecision;
     }
 
-    public void setPricePrecision(Integer pricePrecision) {
+    public void setPricePrecision(Double pricePrecision) {
         this.pricePrecision = pricePrecision;
     }
 

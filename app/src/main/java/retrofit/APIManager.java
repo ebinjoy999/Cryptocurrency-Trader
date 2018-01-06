@@ -11,7 +11,8 @@ import retrofit2.Callback;
 
 public class APIManager<TClassResponse,TClass>  {
 
-InterfaceAPIManager interfaceAPIManager;
+    public static final String KEY_REQUEST_QUERY_PARAMS = "keyQuery_Params";
+    InterfaceAPIManager interfaceAPIManager;
 Context ct;
 ApiInterface apiService;
 
@@ -51,6 +52,8 @@ public APIManager(TClass classCallBack, Context ct){
 //                return (Call<TClassResponse>) apiService.createCheckin(bodyCheckin);
           case REQUEST_GET_SYMBOLS:
                 return (Call<TClassResponse>) apiService.getSymbols();
+            case REQUEST_GET_TICKERS:
+                return  (Call<TClassResponse>) apiService.getTickers(params.get(KEY_REQUEST_QUERY_PARAMS).toString());
 
         }
         return null;

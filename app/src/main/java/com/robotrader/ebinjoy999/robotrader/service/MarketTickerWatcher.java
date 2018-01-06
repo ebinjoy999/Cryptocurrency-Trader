@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit.APIManager;
@@ -23,17 +24,31 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
     MarketTickerWatcher(Context ct){
        apiManager = new APIManager(MarketTickerWatcher.this,ct);
        sharedPreferenceManagerC = new SharedPreferenceManagerC(ct);
-       intializeValues();
+        intializeSymbolDetails();
        this.ct = ct;
     }
 
-    private void intializeValues() {
-
+    private void intializeSymbolDetails() {
         if(sharedPreferenceManagerC.checkIsSymbolDetailsInLocalValid()){
             List<Symbol> symbols = sharedPreferenceManagerC.getSymbolsDetailsSharedPref(ct);
-            int d = 1;
-            int g =1;
+            getLivePrice(symbols);
         }else apiManager.getResponseAsJavaModel(APIManager.REQUEST_GET_SYMBOLS,null);
+    }
+
+    private void getLivePrice(List<Symbol> symbols) {
+        if(symbols!=null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Symbol symbol : symbols) {
+                stringBuilder.append(",t" + symbol.getPair().toUpperCase());
+            }
+            final String query = stringBuilder.toString().substring(1, stringBuilder.toString().length());
+            apiManager.getResponseAsJavaModel(APIManager.REQUEST_GET_TICKERS,
+                    new HashMap<String, Object>() {{
+                        put(APIManager.KEY_REQUEST_QUERY_PARAMS, query);
+                    }});
+        }else {
+
+        }
     }
 
     @Override
@@ -42,9 +57,18 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
            case APIManager.REQUEST_GET_SYMBOLS:
                  if( (jsonResult instanceof List) && ((List<Symbol>) jsonResult).size()> 0 && ((List<Symbol>) jsonResult).get(0) instanceof Symbol) {
                      sharedPreferenceManagerC.saveSymbolDetailsSharedPref(ct,((List<Symbol>) jsonResult));
+                     getLivePrice(((List<Symbol>) jsonResult));
                  }else {
 
                  }
+               break;
+
+           case APIManager.REQUEST_GET_TICKERS:
+               if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<Symbol>) jsonResult).get(0) instanceof List) {
+
+               }else {
+
+               }
                break;
        }
     }

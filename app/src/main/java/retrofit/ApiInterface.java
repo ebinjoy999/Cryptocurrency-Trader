@@ -19,7 +19,7 @@ public interface ApiInterface {
 
 
     @GET("v2/tickers")
-    Call<List<Symbol>> getTickers(@Query("symbols") String symbols);
+    Call<List<Object>> getTickers(@Query("symbols") String symbols);
 
 //    //delete a checkin
 //    @DELETE("checkins/{id}")

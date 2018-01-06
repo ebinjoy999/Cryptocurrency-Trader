@@ -5,9 +5,16 @@ import android.content.SharedPreferences;
 import android.provider.Settings;
 
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ebinjoy999 on 06/01/18.
@@ -51,7 +58,53 @@ public class SharedPreferenceManagerC {
         if(json.equalsIgnoreCase("")){
             return null;
         }
-        List<Symbol> obj = gson.fromJson(json, List.class);
-        return obj;
+        List<LinkedTreeMap<String, Object>> obj = gson.fromJson(json, List.class);
+        return convertKeyValueToJSON(obj);
+//        return obj;
     }
+
+    public static List<Symbol> convertKeyValueToJSON(List<LinkedTreeMap<String, Object>>  ltmL) {
+        List<Symbol> symbols = new ArrayList<>();
+        for(LinkedTreeMap<String, Object> ltm : ltmL){
+            Object[] objs = ltm.entrySet().toArray();
+            Symbol symbol = new Symbol();
+            for (int l=0;l<objs.length;l++)
+            {
+                Map.Entry o= (Map.Entry) objs[l];
+                    if (o !=null) {
+                        if(o.getKey().toString().equalsIgnoreCase("pair"))
+                            symbol.setPair( o.getValue().toString());
+                        else if(o.getKey().toString().equalsIgnoreCase("price_precision"))
+                            symbol.setPricePrecision((Double) o.getValue());
+                        else if(o.getKey().toString().equalsIgnoreCase("initial_margin"))
+                            symbol.setInitialMargin( o.getValue().toString());
+                        else if(o.getKey().toString().equalsIgnoreCase("minimum_margin"))
+                            symbol.setMinimumMargin( o.getValue().toString());
+                        else if(o.getKey().toString().equalsIgnoreCase("maximum_order_size"))
+                            symbol.setMaximumOrderSize( o.getValue().toString());
+                        else if(o.getKey().toString().equalsIgnoreCase("minimum_order_size"))
+                            symbol.setMinimumOrderSize( o.getValue().toString());
+                    }
+            }
+            symbols.add(symbol);
+        }
+         return symbols;
+    }
+
+
+
+    //      LinkedTreeMap treeMap = milestone.getImageNames().size()>0? (LinkedTreeMap) milestone.getImageNames().get(0) : null;
+//    JSONObject imageJSON =convertKeyValueToJSON(treeMap);
+//    if(imageJSON!=null){
+//      Iterator<String> iter = imageJSON.keys();
+//      while (iter.hasNext()) {
+//        String key = iter.next();
+//        try {
+//      for(ImageName imageName : milestone.getImageNames())
+//            milestoneImageDataList.add(new MilestoneImageData(null,imageName.getName(),imageName.getCode(),null,false));
+//        } catch (JSONException e) {
+//          // Something went wrong!
+//        }
+//      }
+//      }
 }
