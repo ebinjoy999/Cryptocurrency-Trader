@@ -10,5 +10,6 @@
 
     <string-array name="providers">
         <item>Bitfinex</item>
+        <item>Dummy</item>
     </string-array>
 </resources>

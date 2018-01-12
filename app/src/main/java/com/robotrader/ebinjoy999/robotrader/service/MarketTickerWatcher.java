@@ -1,9 +1,12 @@
 package com.robotrader.ebinjoy999.robotrader.service;
 
 import android.content.Context;
+import android.content.SyncAdapterType;
 
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
+import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,7 +67,17 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                break;
 
            case APIManager.REQUEST_GET_TICKERS:
-               if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<Symbol>) jsonResult).get(0) instanceof List) {
+               if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<ArrayList>) jsonResult).get(0) instanceof List) {
+                   HashMap<String, SymbolDetails> symbolDetails = new HashMap<>();
+                   for(ArrayList arrayListDetail :  ((List<ArrayList>) jsonResult)){
+                       if(arrayListDetail.get(0).toString().contains("USD"))
+                       symbolDetails.put(arrayListDetail.get(0).toString(),new SymbolDetails(arrayListDetail.get(0).toString(),
+                               Float.parseFloat(arrayListDetail.get(1).toString()),Float.parseFloat(arrayListDetail.get(2).toString()),Float.parseFloat(arrayListDetail.get(3).toString()),
+                               Float.parseFloat(arrayListDetail.get(4).toString()),Float.parseFloat(arrayListDetail.get(5).toString()),Float.parseFloat(arrayListDetail.get(6).toString()),
+                               Float.parseFloat(arrayListDetail.get(7).toString()),Float.parseFloat(arrayListDetail.get(8).toString()),Float.parseFloat(arrayListDetail.get(9).toString()),
+                               Float.parseFloat(arrayListDetail.get(10).toString())) );
+                   }
+                  int n =  symbolDetails.size();
 
                }else {
 

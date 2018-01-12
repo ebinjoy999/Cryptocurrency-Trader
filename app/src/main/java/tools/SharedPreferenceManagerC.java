@@ -28,6 +28,8 @@ public class SharedPreferenceManagerC {
         ourInstance = new SharedPreferenceManagerC(ct);
         return ourInstance;
     }
+
+
      SharedPreferences mPrefs;
      SharedPreferences.Editor prefsEditor;
     static String SHARED_PREF_NAME = "market";

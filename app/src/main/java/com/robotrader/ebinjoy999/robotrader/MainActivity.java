@@ -15,18 +15,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.Spinner;
 
 import com.robotrader.ebinjoy999.robotrader.service.TraderMainService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import exchange.setup.CustomDialogClass;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     @BindView(R.id.switchEnableTrade) SwitchCompat switchEnableTrade;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.spinner) Spinner spinnerExchange;
     Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +62,30 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
+        spinnerExchange.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String spinnerCurrentExchange = adapterView.getSelectedItem().toString();
+                String [] exchanges = (getResources().getStringArray(R.array.providers));
+                if (spinnerCurrentExchange.equalsIgnoreCase(exchanges[0])){ //Bitfinex
+
+                    CustomDialogClass cdd=new CustomDialogClass(MainActivity.this);
+                    cdd.setExchange(spinnerCurrentExchange);
+                    cdd.show();
+
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                String spinnerCurrentExchange = adapterView.getSelectedItem().toString();
+                int a = 10;
+            }
+        });
+
+
         if(isMyServiceRunning(TraderMainService.class))
             switchEnableTrade.setChecked(true);
     }
@@ -140,5 +168,13 @@ public class MainActivity extends AppCompatActivity
             }
         }
         return false;
+    }
+
+
+    public interface INavigation {
+
+        void onViewClick(int position);
+
+        void onIconClick(int position);
     }
 }
