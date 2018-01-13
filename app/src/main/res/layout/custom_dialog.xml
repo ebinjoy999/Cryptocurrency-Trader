@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:scrollbars="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#3E80B4"
+    android:fillViewport="true">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
     android:orientation="vertical" >
 
 
     <TextView
-        android:id="@+id/txt_dia"
+        android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="Your credentials?"
+        android:text="Credentials for "
         android:textColor="@android:color/white"
         android:textSize="15dp"
         android:textStyle="bold" />
@@ -24,10 +35,12 @@
 
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:id="@+id/textViewHint"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="(no API details available)" />
+            android:text="(no API details available) Scan new QR code" />
 
 
 
@@ -35,14 +48,14 @@
 
 
     <LinearLayout
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="#3E80B4"
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonRemove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Remove" />
@@ -54,7 +67,7 @@
             android:layout_margin="12dp"
             android:background="@android:color/white"
             android:clickable="true"
-            android:text="Done"
+            android:text="Close"
             android:textColor="#5DBCD2"
             android:textStyle="bold" />
 
@@ -65,14 +78,26 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:textColor="@android:color/white"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please make sure you have explicitly granded camera permission for this app in settings." />
+
         <com.dlazaro66.qrcodereaderview.QRCodeReaderView
             android:layout_margin="8dp"
             android:id="@+id/qrdecoderview"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="150dp" />
 
 
     </LinearLayout>
 
+
+</LinearLayout>
+</ScrollView>
 
 </LinearLayout>

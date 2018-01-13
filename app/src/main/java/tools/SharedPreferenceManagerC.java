@@ -53,6 +53,10 @@ public class SharedPreferenceManagerC {
         prefsEditor.commit();
     }
 
+    public String getKeyToSharedPreferencString(String key){
+       return mPrefs.getString(key, "");
+    }
+
     public  void saveSymbolDetailsSharedPref(Context mContext, List<Symbol> symbols){
         Gson gson = new Gson();
         String json = gson.toJson(symbols);

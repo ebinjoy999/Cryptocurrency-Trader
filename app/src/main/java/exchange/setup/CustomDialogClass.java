@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
+
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.robotrader.ebinjoy999.robotrader.R;
 
@@ -24,6 +26,9 @@ public class CustomDialogClass  extends Dialog implements
     public Dialog d;
     public Button yes, no;
 
+    TextView textViewHint,txtTitle;
+    Button buttonRemove;
+
     SharedPreferenceManagerC sharedPreferenceManagerC;
     public CustomDialogClass(Activity a) {
         super(a);
@@ -40,9 +45,30 @@ public class CustomDialogClass  extends Dialog implements
         sharedPreferenceManagerC = new SharedPreferenceManagerC(contextActiviyt);
 
         yes = (Button) findViewById(R.id.btn_yes);
+        buttonRemove = (Button) findViewById(R.id.buttonRemove);
+        textViewHint = (TextView) findViewById(R.id.textViewHint);
+        txtTitle = findViewById(R.id.txtTitle);
         yes.setOnClickListener(this);
+        buttonRemove.setOnClickListener(this);
 
-        setUpQRReader();
+        setUpView();
+
+    }
+
+    private void setUpView() {
+        txtTitle.setText("Credentials for"+exchange);
+        String user = sharedPreferenceManagerC.getKeyToSharedPreferencString(KEY_user);
+        String key = sharedPreferenceManagerC.getKeyToSharedPreferencString(KEY_pass);
+        if( user.equalsIgnoreCase("")  || key.equalsIgnoreCase("")  ){
+            setUpQRReader();
+            buttonRemove.setVisibility(View.INVISIBLE);
+        }else {
+            buttonRemove.setVisibility(View.VISIBLE);
+            textViewHint.setText("Added one key");
+
+        }
+
+
     }
 
     private void setUpQRReader() {
@@ -72,11 +98,18 @@ public class CustomDialogClass  extends Dialog implements
             case R.id.btn_yes:
                 dismiss();
                 break;
+            case R.id.buttonRemove:
+                sharedPreferenceManagerC.saveKeyToSharedPreferencString(KEY_user,"");
+                sharedPreferenceManagerC.saveKeyToSharedPreferencString(KEY_pass,"");
+                textViewHint.setText("(no API details available) Scan new QR code");
+                buttonRemove.setVisibility(View.INVISIBLE);
 
+                if(qrCodeReaderView!=null)  qrCodeReaderView.startCamera(); else setUpQRReader();
+                break;
             default:
                 break;
         }
-        dismiss();
+//        dismiss();
     }
 
     public void setExchange(String exchange) {
@@ -97,7 +130,10 @@ public class CustomDialogClass  extends Dialog implements
                sharedPreferenceManagerC.saveKeyToSharedPreferencString(KEY_user,user);
                sharedPreferenceManagerC.saveKeyToSharedPreferencString(KEY_pass,key);
 
-               qrCodeReaderView.stopCamera();
+              if(qrCodeReaderView!=null)  qrCodeReaderView.stopCamera();
+               buttonRemove.setVisibility(View.VISIBLE);
+               textViewHint.setText("Added one key");
+
            }
 
     }
