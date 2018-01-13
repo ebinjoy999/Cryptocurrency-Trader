@@ -68,9 +68,10 @@ public class MainActivity extends AppCompatActivity
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String spinnerCurrentExchange = adapterView.getSelectedItem().toString();
                 String [] exchanges = (getResources().getStringArray(R.array.providers));
-                if (spinnerCurrentExchange.equalsIgnoreCase(exchanges[0])){ //Bitfinex
+                if (spinnerCurrentExchange.equalsIgnoreCase(exchanges[1])){ //Bitfinex
 
                     CustomDialogClass cdd=new CustomDialogClass(MainActivity.this);
+                    cdd.setCancelable(false);
                     cdd.setExchange(spinnerCurrentExchange);
                     cdd.show();
 

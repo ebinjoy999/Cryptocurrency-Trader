@@ -7,9 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
-import com.robotrader.ebinjoy999.robotrader.MainActivity;
 import com.robotrader.ebinjoy999.robotrader.R;
 
 import tools.SharedPreferenceManagerC;
@@ -37,14 +35,12 @@ public class CustomDialogClass  extends Dialog implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.custom_dialog);
         sharedPreferenceManagerC = new SharedPreferenceManagerC(contextActiviyt);
 
         yes = (Button) findViewById(R.id.btn_yes);
-        no = (Button) findViewById(R.id.btn_no);
         yes.setOnClickListener(this);
-        no.setOnClickListener(this);
 
         setUpQRReader();
     }
@@ -74,11 +70,9 @@ public class CustomDialogClass  extends Dialog implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_yes:
-                c.finish();
-                break;
-            case R.id.btn_no:
                 dismiss();
                 break;
+
             default:
                 break;
         }
@@ -89,6 +83,8 @@ public class CustomDialogClass  extends Dialog implements
         this.exchange = exchange;
     }
 
+    public final String KEY_user = "key_user";
+    public final String KEY_pass = "key_user_pass";
     @Override
     public void onQRCodeRead(String text, PointF[] points) {
            String qrResult  = text;
@@ -97,8 +93,13 @@ public class CustomDialogClass  extends Dialog implements
            if(split!=null && split.length==2){
                String user = split[0].substring(5,split[0].length());
                String key = split[1];
+
+               sharedPreferenceManagerC.saveKeyToSharedPreferencString(KEY_user,user);
+               sharedPreferenceManagerC.saveKeyToSharedPreferencString(KEY_pass,key);
+
                qrCodeReaderView.stopCamera();
            }
 
     }
+
 }
