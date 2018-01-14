@@ -2,21 +2,78 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mainView"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="center|left"
-    android:paddingLeft="20dp">
-    <ImageView
-        android:id="@+id/itemIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_menu_gallery"/>
+    android:layout_margin="4dp"
+    android:weightSum="5"
+
+   >
+
     <TextView
-        android:id="@+id/itemNameTxt"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="@color/text_secondary_dark"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewPair"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Pair(USD)" />
+
+    <TextView
+        android:gravity="center"
+          android:textColor="@color/text_secondary_dark"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewBid"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Bid" />
+
+    <TextView
+        android:gravity="center"
+        android:textColor="@color/text_green"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewPercentage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="%" />
+
+    <TextView
+        android:visibility="gone"
+        android:gravity="center"
+          android:textColor="@color/text_secondary_dark"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewVolume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="Menu Item"
-        android:layout_marginLeft="10dp"
-        android:textSize="14sp" />
+        android:text="Volume" />
+
+    <TextView
+        android:gravity="center"
+          android:textColor="@color/text_secondary_dark"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewHigh"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="High" />
+
+    <TextView
+        android:gravity="center"
+          android:textColor="@color/text_secondary_dark"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewLow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Low" />
+
+
 </LinearLayout>

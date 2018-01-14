@@ -24,12 +24,15 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 import com.robotrader.ebinjoy999.robotrader.navigation.AdapterNavRecyclerView;
 import com.robotrader.ebinjoy999.robotrader.service.MarketTickerWatcher;
 import com.robotrader.ebinjoy999.robotrader.service.TraderMainService;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import butterknife.BindView;
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity
 
     RecyclerView recyclerViewNavigationView;
     AdapterNavRecyclerView adapterNavRecyclerView;
+    TextView textViewUpdated;
     private void setUPDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -122,10 +126,12 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         recyclerViewNavigationView = navigationView.findViewById(R.id.nav_drawer_recycler_view);
+        textViewUpdated = navigationView.findViewById(R.id.textView);
+
         recyclerViewNavigationView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewNavigationView.setLayoutManager(layoutManager);
-        adapterNavRecyclerView = new AdapterNavRecyclerView();
+        adapterNavRecyclerView = new AdapterNavRecyclerView(MainActivity.this);
         recyclerViewNavigationView.setAdapter(adapterNavRecyclerView);
     }
 
@@ -208,7 +214,8 @@ public class MainActivity extends AppCompatActivity
 
 
     public static final String TRADE_RECEIVER_PRICE = "TRADE_RECEIVER_PRICE";
-
+    Calendar c = Calendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private class TraderReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context arg0, Intent intentE) {
@@ -220,6 +227,7 @@ public class MainActivity extends AppCompatActivity
                     if(symbolDetails!=null && symbolDetails.size()>0 && recyclerViewNavigationView!=null){
                         adapterNavRecyclerView.setSymbolsList(symbolDetails);
                         adapterNavRecyclerView.notifyDataSetChanged();
+                        textViewUpdated.setText(sdf.format(c.getTime()));
                     }
                     break;
 
