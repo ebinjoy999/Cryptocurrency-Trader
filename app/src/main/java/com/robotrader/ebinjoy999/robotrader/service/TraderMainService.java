@@ -123,7 +123,10 @@ public class TraderMainService extends Service {
 
                 try {
 
-                    Thread.sleep(2000);
+                    if(marketTickerWatcher!=null  && !marketTickerWatcher.isRunningForLivePrice())
+                        marketTickerWatcher.intializeSymbolDetailsAndGetLivePrice();
+
+                    Thread.sleep(10000);
                     Log.e(TAG,"Running...");
                 } catch (InterruptedException e) {
                     // Restore interrupt status.

@@ -214,7 +214,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public static final String TRADE_RECEIVER_PRICE = "TRADE_RECEIVER_PRICE";
-    Calendar c = Calendar.getInstance();
+
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private class TraderReceiver extends BroadcastReceiver {
         @Override
@@ -227,6 +227,7 @@ public class MainActivity extends AppCompatActivity
                     if(symbolDetails!=null && symbolDetails.size()>0 && recyclerViewNavigationView!=null){
                         adapterNavRecyclerView.setSymbolsList(symbolDetails);
                         adapterNavRecyclerView.notifyDataSetChanged();
+                        Calendar c = Calendar.getInstance();
                         textViewUpdated.setText(sdf.format(c.getTime()));
                     }
                     break;

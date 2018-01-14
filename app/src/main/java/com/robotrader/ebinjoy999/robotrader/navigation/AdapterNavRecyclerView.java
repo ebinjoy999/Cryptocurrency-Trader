@@ -64,6 +64,15 @@ public class AdapterNavRecyclerView extends RecyclerView.Adapter<AdapterNavRecyc
                     holder.textViewPercentage.setTextColor(ContextCompat.getColor(context,R.color.text_red));
                 }
             }
+        }else if (position==0){
+            holder.textViewPercentage.setTextColor(ContextCompat.getColor(context,R.color.text_green));
+            holder.textViewPair.setText("Pair(USD)");
+            holder.textViewBid.setText("Bid");
+            holder.textViewVolume.setText("Volume");
+            holder.textViewHigh.setText("High");
+            holder.textViewLow.setText("Low");
+            holder.textViewPercentage.setText("%");
+
         }
     }
 
@@ -76,6 +85,7 @@ public class AdapterNavRecyclerView extends RecyclerView.Adapter<AdapterNavRecyc
     public void setSymbolsList(HashMap<String,SymbolDetails> symbolsList) {
 
 //        this.symbolsList = symbolsList;
+        this.symbolsList = null;
         this.symbolsList= new LinkedHashMap<String,SymbolDetails>(symbolsList);
     }
 

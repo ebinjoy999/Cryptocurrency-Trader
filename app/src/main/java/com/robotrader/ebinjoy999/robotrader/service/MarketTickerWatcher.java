@@ -26,14 +26,18 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
   APIManager apiManager;
   SharedPreferenceManagerC sharedPreferenceManagerC;
   Context ct;
+
+
+  Boolean runningForLivePrice  = false;
+
     MarketTickerWatcher(Context ct){
        apiManager = new APIManager(MarketTickerWatcher.this,ct);
        sharedPreferenceManagerC = new SharedPreferenceManagerC(ct);
-        intializeSymbolDetails();
        this.ct = ct;
     }
 
-    private void intializeSymbolDetails() {
+    public void intializeSymbolDetailsAndGetLivePrice() {
+        runningForLivePrice = true;
         if(sharedPreferenceManagerC.checkIsSymbolDetailsInLocalValid()){
             List<Symbol> symbols = sharedPreferenceManagerC.getSymbolsDetailsSharedPref(ct);
             getLivePrice(symbols);
@@ -69,7 +73,8 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                  }
                break;
 
-           case APIManager.REQUEST_GET_TICKERS:
+           case APIManager.REQUEST_GET_TICKERS:  //Got live price
+               runningForLivePrice = false;
                if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<ArrayList>) jsonResult).get(0) instanceof List) {
                    HashMap<String, SymbolDetails> symbolDetails = new HashMap<>();
                    for(ArrayList arrayListDetail :  ((List<ArrayList>) jsonResult)){
@@ -94,6 +99,15 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
     @Override
     public void onAPILoadFailed(String REQUEST_TYPE, String message, Object jsonResult) {
+        switch (REQUEST_TYPE) {
+            case APIManager.REQUEST_GET_SYMBOLS: runningForLivePrice = false;
+                break;
+            case APIManager.REQUEST_GET_TICKERS:  runningForLivePrice = false;
+                break;
+        }
+    }
 
+    public boolean isRunningForLivePrice() {
+        return runningForLivePrice;
     }
 }
