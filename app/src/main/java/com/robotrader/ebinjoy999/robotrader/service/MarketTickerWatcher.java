@@ -1,8 +1,10 @@
 package com.robotrader.ebinjoy999.robotrader.service;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncAdapterType;
 
+import com.robotrader.ebinjoy999.robotrader.MainActivity;
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 
@@ -54,6 +56,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
         }
     }
 
+    public static final String KEY_SYMBOL_DETAILS = "KEY_SYMBOL_DETAILS";
     @Override
     public void onAPILoadSuccess(String REQUEST_TYPE, String message, Object jsonResult) {
        switch (REQUEST_TYPE){
@@ -77,8 +80,11 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                                Float.parseFloat(arrayListDetail.get(7).toString()),Float.parseFloat(arrayListDetail.get(8).toString()),Float.parseFloat(arrayListDetail.get(9).toString()),
                                Float.parseFloat(arrayListDetail.get(10).toString())) );
                    }
-                  int n =  symbolDetails.size();
-
+//                  int n =  symbolDetails.size();
+                   Intent intent = new Intent();
+                   intent.setAction(MainActivity.TRADE_RECEIVER_PRICE);
+                   intent.putExtra(KEY_SYMBOL_DETAILS, symbolDetails);
+                   ct.sendBroadcast(intent);
                }else {
 
                }

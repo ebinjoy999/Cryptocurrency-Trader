@@ -93,6 +93,10 @@ public class TraderMainService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+
+
+
         Toast.makeText(this, "Disconnecting Robo...", Toast.LENGTH_SHORT).show();
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

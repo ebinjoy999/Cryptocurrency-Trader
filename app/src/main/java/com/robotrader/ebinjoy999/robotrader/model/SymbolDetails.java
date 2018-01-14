@@ -1,10 +1,12 @@
 package com.robotrader.ebinjoy999.robotrader.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ebinjoy999 on 08/01/18.
  */
 
-public class SymbolDetails {
+public class SymbolDetails implements Serializable {
     String SYMBOL;
 
     float BID; //Price of last highest bid

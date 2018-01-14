@@ -1,10 +1,14 @@
 package com.robotrader.ebinjoy999.robotrader;
 
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -17,9 +21,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 
+import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
+import com.robotrader.ebinjoy999.robotrader.navigation.AdapterNavRecyclerView;
+import com.robotrader.ebinjoy999.robotrader.service.MarketTickerWatcher;
 import com.robotrader.ebinjoy999.robotrader.service.TraderMainService;
+
+import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,11 +43,18 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.spinner) Spinner spinnerExchange;
     Intent intent;
+    TraderReceiver traderReceiver;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        traderReceiver = new TraderReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MainActivity.TRADE_RECEIVER_PRICE);
+        registerReceiver(traderReceiver, intentFilter);
+
         intent = new Intent(this, TraderMainService.class);
         setSupportActionBar(toolbar);
         fab.setVisibility(View.GONE);
@@ -91,6 +109,8 @@ public class MainActivity extends AppCompatActivity
             switchEnableTrade.setChecked(true);
     }
 
+    RecyclerView recyclerViewNavigationView;
+    AdapterNavRecyclerView adapterNavRecyclerView;
     private void setUPDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -100,6 +120,13 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        recyclerViewNavigationView = navigationView.findViewById(R.id.nav_drawer_recycler_view);
+        recyclerViewNavigationView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerViewNavigationView.setLayoutManager(layoutManager);
+        adapterNavRecyclerView = new AdapterNavRecyclerView();
+        recyclerViewNavigationView.setAdapter(adapterNavRecyclerView);
     }
 
 
@@ -177,5 +204,28 @@ public class MainActivity extends AppCompatActivity
         void onViewClick(int position);
 
         void onIconClick(int position);
+    }
+
+
+    public static final String TRADE_RECEIVER_PRICE = "TRADE_RECEIVER_PRICE";
+
+    private class TraderReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context arg0, Intent intentE) {
+            // TODO Auto-generated method stub
+            switch( intentE.getAction()){
+                case TRADE_RECEIVER_PRICE:
+                    HashMap<String, SymbolDetails> symbolDetails = new HashMap<>();
+                    symbolDetails = (HashMap<String, SymbolDetails>)intentE.getSerializableExtra(MarketTickerWatcher.KEY_SYMBOL_DETAILS);
+                    if(symbolDetails!=null && symbolDetails.size()>0 && recyclerViewNavigationView!=null){
+                        adapterNavRecyclerView.setSymbolsList(symbolDetails);
+                        adapterNavRecyclerView.notifyDataSetChanged();
+                    }
+                    break;
+
+            }
+
+        }
+
     }
 }
