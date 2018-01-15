@@ -23,15 +23,16 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 
+import com.robotrader.ebinjoy999.robotrader.adapter.AdapterRoboLogs;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
-import com.robotrader.ebinjoy999.robotrader.navigation.AdapterNavRecyclerView;
+import com.robotrader.ebinjoy999.robotrader.adapter.AdapterNavRecyclerView;
 import com.robotrader.ebinjoy999.robotrader.service.MarketTickerWatcher;
 import com.robotrader.ebinjoy999.robotrader.service.TraderMainService;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -54,9 +55,17 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         traderReceiver = new TraderReceiver();
+
+        IntentFilter intentFilter1 = new IntentFilter();
+        intentFilter1.addAction(MainActivity.TRADE_RECEIVER_LOGS);
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MainActivity.TRADE_RECEIVER_PRICE);
+
+
+        registerReceiver(traderReceiver, intentFilter1);
         registerReceiver(traderReceiver, intentFilter);
+
 
         intent = new Intent(this, TraderMainService.class);
         setSupportActionBar(toolbar);
@@ -70,6 +79,39 @@ public class MainActivity extends AppCompatActivity
 //        });
         setUPDrawer();
         setListners();
+        setUpBottumSheetLog();
+    }
+
+
+     RecyclerView recyclerViewLogs;
+    AdapterRoboLogs adapterRoboLogs;
+    private void setUpBottumSheetLog() {
+        LinearLayout llBottomSheet = findViewById(R.id.bottom_sheet);
+
+        recyclerViewLogs = findViewById(R.id.recyclerViewLogs);
+        recyclerViewLogs.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerViewLogs.setLayoutManager(layoutManager);
+         adapterRoboLogs = new AdapterRoboLogs(MainActivity.this);
+        recyclerViewLogs.setAdapter(adapterRoboLogs);
+
+//        // change the state of the bottom sheet
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+//        BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//
+//            }
+//        });
+
+
     }
 
     private void setListners() {
@@ -214,7 +256,7 @@ public class MainActivity extends AppCompatActivity
 
 
     public static final String TRADE_RECEIVER_PRICE = "TRADE_RECEIVER_PRICE";
-
+    public static final String TRADE_RECEIVER_LOGS = "TRADE_RECEIVER_LOGS";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private class TraderReceiver extends BroadcastReceiver {
         @Override
@@ -229,6 +271,15 @@ public class MainActivity extends AppCompatActivity
                         adapterNavRecyclerView.notifyDataSetChanged();
                         Calendar c = Calendar.getInstance();
                         textViewUpdated.setText(sdf.format(c.getTime()));
+                    }
+                    break;
+
+                case TRADE_RECEIVER_LOGS:
+                    ArrayList<String> logList = new ArrayList<>();
+                    logList =  (ArrayList<String>) intentE.getSerializableExtra(MarketTickerWatcher.KEY_LOGS);
+                    if(logList!=null && logList.size()>0 && recyclerViewLogs!=null){
+                        adapterRoboLogs.setLogList(logList);
+                        adapterRoboLogs.notifyDataSetChanged();
                     }
                     break;
 

@@ -1,4 +1,4 @@
-package com.robotrader.ebinjoy999.robotrader.navigation;
+package com.robotrader.ebinjoy999.robotrader.adapter;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.robotrader.ebinjoy999.robotrader.R;
-import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 
 import java.math.BigDecimal;

@@ -8,7 +8,9 @@ import com.robotrader.ebinjoy999.robotrader.MainActivity;
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,8 +31,9 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
 
   Boolean runningForLivePrice  = false;
-
+    ArrayList<String> logList;
     MarketTickerWatcher(Context ct){
+        logList = new ArrayList<>();
        apiManager = new APIManager(MarketTickerWatcher.this,ct);
        sharedPreferenceManagerC = new SharedPreferenceManagerC(ct);
        this.ct = ct;
@@ -61,8 +64,10 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
     }
 
     public static final String KEY_SYMBOL_DETAILS = "KEY_SYMBOL_DETAILS";
+    public static final String KEY_LOGS = "KEY_LOGS";
     @Override
     public void onAPILoadSuccess(String REQUEST_TYPE, String message, Object jsonResult) {
+        addLogs("API Success -"+REQUEST_TYPE);
        switch (REQUEST_TYPE){
            case APIManager.REQUEST_GET_SYMBOLS:
                  if( (jsonResult instanceof List) && ((List<Symbol>) jsonResult).size()> 0 && ((List<Symbol>) jsonResult).get(0) instanceof Symbol) {
@@ -97,14 +102,28 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
        }
     }
 
+
+    SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm:ss");
     @Override
     public void onAPILoadFailed(String REQUEST_TYPE, String message, Object jsonResult) {
+       //Add logs
+       addLogs("API failed -"+REQUEST_TYPE);
+
         switch (REQUEST_TYPE) {
             case APIManager.REQUEST_GET_SYMBOLS: runningForLivePrice = false;
                 break;
             case APIManager.REQUEST_GET_TICKERS:  runningForLivePrice = false;
                 break;
         }
+    }
+
+    private void addLogs(String s) {
+        Calendar c = Calendar.getInstance();
+        logList.add(sdf.format(c.getTime())+" :: "+s);
+        Intent intent = new Intent();
+        intent.setAction(MainActivity.TRADE_RECEIVER_LOGS);
+        intent.putExtra(KEY_LOGS, logList);
+        ct.sendBroadcast(intent);
     }
 
     public boolean isRunningForLivePrice() {

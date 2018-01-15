@@ -10,6 +10,7 @@
    >
 
     <TextView
+        android:lines="1"
         android:layout_weight="1"
         android:gravity="center"
         android:textColor="@color/text_secondary_dark"
@@ -21,6 +22,7 @@
         android:text="Pair(USD)" />
 
     <TextView
+        android:lines="1"
         android:gravity="center"
           android:textColor="@color/text_secondary_dark"
         android:textStyle="bold"
@@ -32,6 +34,7 @@
         android:text="Bid" />
 
     <TextView
+        android:lines="1"
         android:gravity="center"
         android:textColor="@color/text_green"
         android:textStyle="bold"
@@ -43,6 +46,7 @@
         android:text="%" />
 
     <TextView
+        android:lines="1"
         android:visibility="gone"
         android:gravity="center"
           android:textColor="@color/text_secondary_dark"
@@ -54,6 +58,7 @@
         android:text="Volume" />
 
     <TextView
+        android:lines="1"
         android:gravity="center"
           android:textColor="@color/text_secondary_dark"
         android:textStyle="bold"
@@ -65,6 +70,7 @@
         android:text="High" />
 
     <TextView
+        android:lines="1"
         android:gravity="center"
           android:textColor="@color/text_secondary_dark"
         android:textStyle="bold"
