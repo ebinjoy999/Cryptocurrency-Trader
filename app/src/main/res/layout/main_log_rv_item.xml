@@ -4,7 +4,7 @@
     android:orientation="horizontal">
     <TextView
         android:layout_margin="2dp"
-        android:textColor="@color/text_secondary_dark"
+        android:textColor="@color/text_primary_dark"
         android:textSize="11sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

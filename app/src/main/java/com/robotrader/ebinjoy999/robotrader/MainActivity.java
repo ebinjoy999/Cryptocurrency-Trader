@@ -23,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.robotrader.ebinjoy999.robotrader.adapter.AdapterRoboLogs;
@@ -85,9 +86,10 @@ public class MainActivity extends AppCompatActivity
 
      RecyclerView recyclerViewLogs;
     AdapterRoboLogs adapterRoboLogs;
+    Switch switchAutoscroll;
     private void setUpBottumSheetLog() {
         LinearLayout llBottomSheet = findViewById(R.id.bottom_sheet);
-
+        switchAutoscroll = findViewById(R.id.switch2);
         recyclerViewLogs = findViewById(R.id.recyclerViewLogs);
         recyclerViewLogs.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -280,6 +282,9 @@ public class MainActivity extends AppCompatActivity
                     if(logList!=null && logList.size()>0 && recyclerViewLogs!=null){
                         adapterRoboLogs.setLogList(logList);
                         adapterRoboLogs.notifyDataSetChanged();
+                        if(switchAutoscroll.isChecked()){
+                            recyclerViewLogs.smoothScrollToPosition(logList.size());
+                        }
                     }
                     break;
 

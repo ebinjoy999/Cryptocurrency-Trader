@@ -67,7 +67,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
     public static final String KEY_LOGS = "KEY_LOGS";
     @Override
     public void onAPILoadSuccess(String REQUEST_TYPE, String message, Object jsonResult) {
-        addLogs("API Success -"+REQUEST_TYPE);
+        addLogs("API "+ (jsonResult==null? "JSON out null -":"Success -")+REQUEST_TYPE);
        switch (REQUEST_TYPE){
            case APIManager.REQUEST_GET_SYMBOLS:
                  if( (jsonResult instanceof List) && ((List<Symbol>) jsonResult).size()> 0 && ((List<Symbol>) jsonResult).get(0) instanceof Symbol) {
