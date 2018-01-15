@@ -15,11 +15,13 @@ public class APIManager<TClassResponse,TClass>  {
     InterfaceAPIManager interfaceAPIManager;
 Context ct;
 ApiInterface apiService;
+    ApiInterface apiServiceWithAuth;
 
 public APIManager(TClass classCallBack, Context ct){
     if(classCallBack!=null) this.interfaceAPIManager = (InterfaceAPIManager) classCallBack;
     this.ct =  ct;
-    apiService = ApiClient.getClient(ct).create(ApiInterface.class);
+    apiService = ApiClient.getClient(ct, false).create(ApiInterface.class);
+    apiServiceWithAuth = ApiClient.getClient(ct, true).create(ApiInterface.class);
 }
 
     public static final String REQUEST_GET_SYMBOLS = "REQUEST_GET_SYMBOLS";

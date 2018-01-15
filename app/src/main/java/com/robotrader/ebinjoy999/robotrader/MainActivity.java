@@ -84,37 +84,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-     RecyclerView recyclerViewLogs;
-    AdapterRoboLogs adapterRoboLogs;
-    Switch switchAutoscroll;
-    private void setUpBottumSheetLog() {
-        LinearLayout llBottomSheet = findViewById(R.id.bottom_sheet);
-        switchAutoscroll = findViewById(R.id.switch2);
-        recyclerViewLogs = findViewById(R.id.recyclerViewLogs);
-        recyclerViewLogs.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerViewLogs.setLayoutManager(layoutManager);
-         adapterRoboLogs = new AdapterRoboLogs(MainActivity.this);
-        recyclerViewLogs.setAdapter(adapterRoboLogs);
 
-//        // change the state of the bottom sheet
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-//        BottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//
-//            }
-//        });
-
-
-    }
 
     private void setListners() {
         switchEnableTrade.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -179,6 +149,37 @@ public class MainActivity extends AppCompatActivity
         recyclerViewNavigationView.setAdapter(adapterNavRecyclerView);
     }
 
+    RecyclerView recyclerViewLogs;
+    AdapterRoboLogs adapterRoboLogs;
+    Switch switchAutoscroll;
+    private void setUpBottumSheetLog() {
+        LinearLayout llBottomSheet = findViewById(R.id.bottom_sheet);
+        switchAutoscroll = findViewById(R.id.switch2);
+        recyclerViewLogs = findViewById(R.id.recyclerViewLogs);
+        recyclerViewLogs.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerViewLogs.setLayoutManager(layoutManager);
+        adapterRoboLogs = new AdapterRoboLogs(MainActivity.this);
+        recyclerViewLogs.setAdapter(adapterRoboLogs);
+
+//        // change the state of the bottom sheet
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+//        BottomSheetBehavior.BottomSheetCallback() {
+//            @Override
+//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+//
+//            }
+//
+//            @Override
+//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+//
+//            }
+//        });
+
+
+    }
 
     @Override
     public void onBackPressed() {
