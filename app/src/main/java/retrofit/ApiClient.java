@@ -48,36 +48,26 @@ public class ApiClient {
                 if (original.url().encodedPath().equalsIgnoreCase("sessions"))
                     return chain.proceed(original);
 
-//
-//                 final String ALGORITHM_HMACSHA384 = "HmacSHA384";
-//                 String apiKey = "";
-//                 String apiKeySecret = "";
-//                 long nonce = System.currentTimeMillis();
-//                  String urlPath = "/v1/balances";
-//
-//                JSONObject jo = new JSONObject();
-//                try {
-//                    jo.put("request", urlPath);
-//                    jo.put("nonce", Long.toString(nonce));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                // API v1
-//                String payload = jo.toString();
-//
-//                // this is usage for Base64 Implementation in Android. For pure java you can use java.util.Base64.Encoder
-//                // Base64.NO_WRAP: Base64-string have to be as one line string
-//                String payload_base64 = Base64.encodeToString(payload.getBytes(), Base64.NO_WRAP);
-//                String payload_sha384hmac = hmacDigest(payload_base64, apiKeySecret, ALGORITHM_HMACSHA384);
 
 
-
+                final String ALGORITHM_HMACSHA384 = "HmacSHA384";
                  String apiKey = "kBZAnQY7cTDc1QuGtx7xmt0AFWoXsKhVQzV7HoZ5l2e";
                  String apiKeySecret = "046uT0oKewxgorJoRXLB3iSxYze1BMsXitdhzl9YS5W";
                  long nonce = System.currentTimeMillis();
-                  String urlPath = "/v2/auth/r/wallets";
+                  String urlPath = "/v1/balances";
 
-               String signature = "/api/" + urlPath + nonce + body
+                JSONObject jo = new JSONObject();
+                try {
+                    jo.put("request", urlPath);
+                    jo.put("nonce", Long.toString(nonce));
+                }catch (Exception exc){}
+
+                // API v1
+                String payload = jo.toString();
+                String payload_base64 = Base64.encodeToString(payload.getBytes(), Base64.NO_WRAP);
+                String payload_sha384hmac = hmacDigest(payload_base64, apiKeySecret, ALGORITHM_HMACSHA384);
+
+
 
                 Request request = original.newBuilder()
                         .header("Content-Type", "application/json")
@@ -99,7 +89,8 @@ public class ApiClient {
              final String BASE_URL = mUserDetails.getBaseUrl();
             Retrofit.Builder build = new Retrofit.Builder();
                     build.baseUrl(BASE_URL);
-                    if(needAuth) build.client(httpClient.build());
+                    if(needAuth)
+                        build.client(httpClient.build());
                     build.addConverterFactory(GsonConverterFactory.create());
                     retrofit = build.build();
         }

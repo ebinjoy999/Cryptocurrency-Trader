@@ -6,6 +6,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 /**
@@ -20,6 +21,11 @@ public interface ApiInterface {
 
     @GET("v2/tickers")
     Call<List<Object>> getTickers(@Query("symbols") String symbols);
+
+
+    @POST("v1/balances")
+    Call<List<Object>> getWalletBalences();
+
 
 //    //delete a checkin
 //    @DELETE("checkins/{id}")

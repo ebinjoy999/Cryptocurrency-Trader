@@ -15,18 +15,19 @@ public class APIManager<TClassResponse,TClass>  {
     InterfaceAPIManager interfaceAPIManager;
 Context ct;
 ApiInterface apiService;
-    ApiInterface apiServiceWithAuth;
+//    ApiInterface apiServiceWithAuth;
 
 public APIManager(TClass classCallBack, Context ct){
     if(classCallBack!=null) this.interfaceAPIManager = (InterfaceAPIManager) classCallBack;
     this.ct =  ct;
-    apiService = ApiClient.getClient(ct, false).create(ApiInterface.class);
-    apiServiceWithAuth = ApiClient.getClient(ct, true).create(ApiInterface.class);
+    apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
+//    apiServiceWithAuth = ApiClient.getClient(ct, true).create(ApiInterface.class);
 }
 
     public static final String REQUEST_GET_SYMBOLS = "REQUEST_GET_SYMBOLS";
     public static final String REQUEST_GET_TICKERS = "REQUEST_GET_TICKERS";
     public static final String REQUEST_GET_PLATFORM_STATUS = "REQUEST_GET_PLATFORM_STATUS";
+    public static final String REQUEST_POST_WALLET = "REQUEST_POST_WALLET";
 
     public  void getResponseAsJavaModel(final String REQUEST_TYPE, HashMap<String, Object> params){
         Call<TClassResponse> call = getDesiredAPIMethod(REQUEST_TYPE,params) ;
@@ -56,6 +57,8 @@ public APIManager(TClass classCallBack, Context ct){
                 return (Call<TClassResponse>) apiService.getSymbols();
             case REQUEST_GET_TICKERS:
                 return  (Call<TClassResponse>) apiService.getTickers(params.get(KEY_REQUEST_QUERY_PARAMS).toString());
+            case REQUEST_POST_WALLET:
+                return  (Call<TClassResponse>) apiService.getWalletBalences();
 
         }
         return null;

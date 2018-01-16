@@ -95,11 +95,19 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                    intent.setAction(MainActivity.TRADE_RECEIVER_PRICE);
                    intent.putExtra(KEY_SYMBOL_DETAILS, symbolDetails);
                    ct.sendBroadcast(intent);
+
+                   intaiateAlogorithm(symbolDetails);
+
                }else {
 
                }
                break;
        }
+    }
+
+    private void intaiateAlogorithm(HashMap<String, SymbolDetails> symbolDetails) {
+        apiManager.getResponseAsJavaModel(APIManager.REQUEST_POST_WALLET,null);;
+
     }
 
 
