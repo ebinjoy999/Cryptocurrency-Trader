@@ -1,6 +1,7 @@
 package retrofit;
 
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
+import com.robotrader.ebinjoy999.robotrader.model.WalletItem;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface ApiInterface {
 
 
     @POST("v1/balances")
-    Call<List<Object>> getWalletBalences();
+    Call<List<WalletItem>> getWalletBalences();
 
 
 //    //delete a checkin
