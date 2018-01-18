@@ -29,7 +29,7 @@ public class SymbolDetails implements Serializable {
         this.ASK = ASK;
         this.ASK_SIZE = ASK_SIZE;
         this.DAILY_CHANGE = DAILY_CHANGE;
-        this.DAILY_CHANGE_PERC = DAILY_CHANGE_PERC;
+        this.DAILY_CHANGE_PERC = (DAILY_CHANGE_PERC*100);
         this.LAST_PRICE = LAST_PRICE;
         this.VOLUME = VOLUME;
         this.HIGH = HIGH;

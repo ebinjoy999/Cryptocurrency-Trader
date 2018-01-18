@@ -2,6 +2,9 @@ package retrofit;
 
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 import com.robotrader.ebinjoy999.robotrader.model.WalletItem;
+import com.robotrader.ebinjoy999.robotrader.model.activeorders.ActiveOrders;
+import com.robotrader.ebinjoy999.robotrader.model.cancelorder.ResponseCancelAllOrder;
+import com.robotrader.ebinjoy999.robotrader.model.neworder.ResponseOnNewOrder;
 
 import java.util.List;
 
@@ -26,6 +29,19 @@ public interface ApiInterface {
 
     @POST("v1/balances")
     Call<List<WalletItem>> getWalletBalences();
+
+    @POST("/v1/order/new")
+    Call<ResponseOnNewOrder> postNewOrder();
+
+    @POST("v1/order/cancel/multi")
+    Call<ResponseOnNewOrder> postCancelOrder();
+
+    @POST("v1/order/cancel/all")
+    Call<ResponseCancelAllOrder> postCancelAllOrder();
+
+    @POST("v1/orders")
+    Call<List<ActiveOrders>> getActiveOrders();
+
 
 
 //    //delete a checkin

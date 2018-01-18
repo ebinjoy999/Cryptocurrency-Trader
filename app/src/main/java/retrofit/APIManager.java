@@ -20,14 +20,18 @@ ApiInterface apiService;
 public APIManager(TClass classCallBack, Context ct){
     if(classCallBack!=null) this.interfaceAPIManager = (InterfaceAPIManager) classCallBack;
     this.ct =  ct;
-    apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
 //    apiServiceWithAuth = ApiClient.getClient(ct, true).create(ApiInterface.class);
 }
 
+    public static final String REQUEST_GET_PLATFORM_STATUS = "REQUEST_GET_PLATFORM_STATUS";
     public static final String REQUEST_GET_SYMBOLS = "REQUEST_GET_SYMBOLS";
     public static final String REQUEST_GET_TICKERS = "REQUEST_GET_TICKERS";
-    public static final String REQUEST_GET_PLATFORM_STATUS = "REQUEST_GET_PLATFORM_STATUS";
     public static final String REQUEST_POST_WALLET = "REQUEST_POST_WALLET";
+
+    public static final String REQUEST_ACTIVE_ORDERS = "REQUEST_ACTIVE_ORDERS";
+    public static final String REQUEST_NEW_ORDER = "REQUEST_NEW_ORDER";
+    public static final String REQUEST_CANCEL_ORDER = "REQUEST_CANCEL_ORDER";
+    public static final String REQUEST_CANCEL_ALL_ORDERS = "REQUEST_CANCEL_ALL_ORDERS";
 
     public  void getResponseAsJavaModel(final String REQUEST_TYPE, HashMap<String, Object> params){
         Call<TClassResponse> call = getDesiredAPIMethod(REQUEST_TYPE,params) ;
@@ -54,12 +58,26 @@ public APIManager(TClass classCallBack, Context ct){
 //                        (params.get(KEY_REQUEST_BODY).toString()).toString());
 //                return (Call<TClassResponse>) apiService.createCheckin(bodyCheckin);
           case REQUEST_GET_SYMBOLS:
+              apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
                 return (Call<TClassResponse>) apiService.getSymbols();
             case REQUEST_GET_TICKERS:
+                apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
                 return  (Call<TClassResponse>) apiService.getTickers(params.get(KEY_REQUEST_QUERY_PARAMS).toString());
             case REQUEST_POST_WALLET:
+                apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
                 return  (Call<TClassResponse>) apiService.getWalletBalences();
-
+            case REQUEST_ACTIVE_ORDERS:
+                apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
+                return  (Call<TClassResponse>) apiService.getActiveOrders();
+            case REQUEST_CANCEL_ORDER:
+                apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
+                return  (Call<TClassResponse>) apiService.postCancelOrder();
+            case REQUEST_CANCEL_ALL_ORDERS:
+                apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
+                return  (Call<TClassResponse>) apiService.postCancelAllOrder();
+            case REQUEST_NEW_ORDER:
+                apiService = ApiClient.getClient(ct, true).create(ApiInterface.class);
+                return  (Call<TClassResponse>) apiService.postNewOrder();
         }
         return null;
     }

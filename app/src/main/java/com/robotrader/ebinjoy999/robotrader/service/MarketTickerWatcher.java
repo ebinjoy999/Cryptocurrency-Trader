@@ -7,6 +7,7 @@ import android.content.SyncAdapterType;
 import com.robotrader.ebinjoy999.robotrader.MainActivity;
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
+import com.robotrader.ebinjoy999.robotrader.model.WalletItem;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
     public static final String KEY_SYMBOL_DETAILS = "KEY_SYMBOL_DETAILS";
     public static final String KEY_LOGS = "KEY_LOGS";
+    HashMap<String, SymbolDetails> symbolDetails;
     @Override
     public void onAPILoadSuccess(String REQUEST_TYPE, String message, Object jsonResult) {
         addLogs("API "+ (jsonResult==null? "JSON out null -":"Success -")+REQUEST_TYPE);
@@ -81,7 +83,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
            case APIManager.REQUEST_GET_TICKERS:  //Got live price
                runningForLivePrice = false;
                if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<ArrayList>) jsonResult).get(0) instanceof List) {
-                   HashMap<String, SymbolDetails> symbolDetails = new HashMap<>();
+                  symbolDetails = new HashMap<>();
                    for(ArrayList arrayListDetail :  ((List<ArrayList>) jsonResult)){
                        if(arrayListDetail.get(0).toString().contains("USD"))
                        symbolDetails.put(arrayListDetail.get(0).toString(),new SymbolDetails(arrayListDetail.get(0).toString(),
@@ -95,18 +97,25 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                    intent.setAction(MainActivity.TRADE_RECEIVER_PRICE);
                    intent.putExtra(KEY_SYMBOL_DETAILS, symbolDetails);
                    ct.sendBroadcast(intent);
-
-                   intaiateAlogorithm(symbolDetails);
-
+                   apiManager.getResponseAsJavaModel(APIManager.REQUEST_POST_WALLET,null);
                }else {
 
                }
                break;
+
+           case APIManager.REQUEST_POST_WALLET:
+               List<WalletItem> walletItems = new ArrayList<>();
+               if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<Object>) jsonResult).get(0) instanceof WalletItem) {
+                   intaiateAlogorithm(symbolDetails, walletItems);
+               }
+
+
+               break;
        }
     }
 
-    private void intaiateAlogorithm(HashMap<String, SymbolDetails> symbolDetails) {
-        apiManager.getResponseAsJavaModel(APIManager.REQUEST_POST_WALLET,null);;
+    private void intaiateAlogorithm(HashMap<String, SymbolDetails> symbolDetails, List<WalletItem> walletItems) {
+
 
     }
 
