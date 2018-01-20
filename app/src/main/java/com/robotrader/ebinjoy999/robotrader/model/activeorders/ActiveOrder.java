@@ -8,7 +8,7 @@ package com.robotrader.ebinjoy999.robotrader.model.activeorders;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ActiveOrders {
+public class ActiveOrder {
 
     @SerializedName("id")
     @Expose

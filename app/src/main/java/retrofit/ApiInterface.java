@@ -2,7 +2,7 @@ package retrofit;
 
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 import com.robotrader.ebinjoy999.robotrader.model.WalletItem;
-import com.robotrader.ebinjoy999.robotrader.model.activeorders.ActiveOrders;
+import com.robotrader.ebinjoy999.robotrader.model.activeorders.ActiveOrder;
 import com.robotrader.ebinjoy999.robotrader.model.cancelorder.ResponseCancelAllOrder;
 import com.robotrader.ebinjoy999.robotrader.model.neworder.ResponseOnNewOrder;
 
@@ -40,7 +40,7 @@ public interface ApiInterface {
     Call<ResponseCancelAllOrder> postCancelAllOrder();
 
     @POST("v1/orders")
-    Call<List<ActiveOrders>> getActiveOrders();
+    Call<List<ActiveOrder>> getActiveOrders();
 
 
 

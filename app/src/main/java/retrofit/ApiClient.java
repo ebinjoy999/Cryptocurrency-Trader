@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.robotrader.ebinjoy999.robotrader.CustomSharedPreference;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -30,12 +29,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
 
     private static final String TAG = "API_AUTH" ;
+
+    public static void setRetrofit(Retrofit retrofit) {
+        ApiClient.retrofit = retrofit;
+    }
+
     //Change login API also volley
     private static Retrofit retrofit = null;
 
     public static void destroInstance(){ retrofit = null; }
 
-    public static Retrofit getClient(final Context ct, boolean needAuth) {
+    public static Retrofit getClient(final Context ct, final boolean needAuth, final String urlPath) {
 
         // Adding header for all request
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
@@ -49,12 +53,14 @@ public class ApiClient {
                     return chain.proceed(original);
 
 
+//                String urlPath = urlP;
+
 
                 final String ALGORITHM_HMACSHA384 = "HmacSHA384";
                  String apiKey = "kBZAnQY7cTDc1QuGtx7xmt0AFWoXsKhVQzV7HoZ5l2e";
                  String apiKeySecret = "046uT0oKewxgorJoRXLB3iSxYze1BMsXitdhzl9YS5W";
                  long nonce = System.currentTimeMillis();
-                  String urlPath = "/v1/balances";
+
 
                 JSONObject jo = new JSONObject();
                 try {

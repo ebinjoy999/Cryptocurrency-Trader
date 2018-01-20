@@ -26,11 +26,13 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.robotrader.ebinjoy999.robotrader.adapter.AdapterActiveOrder;
 import com.robotrader.ebinjoy999.robotrader.adapter.AdapterRoboLogs;
 import com.robotrader.ebinjoy999.robotrader.adapter.AdapterWalletBalance;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 import com.robotrader.ebinjoy999.robotrader.adapter.AdapterNavRecyclerView;
 import com.robotrader.ebinjoy999.robotrader.model.WalletItem;
+import com.robotrader.ebinjoy999.robotrader.model.activeorders.ActiveOrder;
 import com.robotrader.ebinjoy999.robotrader.service.MarketTickerWatcher;
 import com.robotrader.ebinjoy999.robotrader.service.TraderMainService;
 
@@ -73,6 +75,10 @@ public class MainActivity extends AppCompatActivity
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter.addAction(MainActivity.TRADE_WALLET_PRICE);
 
+        IntentFilter intentFilter3 = new IntentFilter();
+        intentFilter.addAction(MainActivity.TRADE_ACTIVE_ORDERS);
+
+        registerReceiver(traderReceiver, intentFilter3);
         registerReceiver(traderReceiver, intentFilter2);
         registerReceiver(traderReceiver, intentFilter1);
         registerReceiver(traderReceiver, intentFilter);
@@ -95,12 +101,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     AdapterWalletBalance adapterWalletBalance;
+    AdapterActiveOrder adapterActiveOrder;
     private void setUpMainView() {
         recyclerViewWalletBalance.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewWalletBalance.setLayoutManager(layoutManager);
         adapterWalletBalance = new AdapterWalletBalance(MainActivity.this);
         recyclerViewWalletBalance.setAdapter(adapterWalletBalance);
+
+        LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
+        recyclerViewActiveOrders.setHasFixedSize(true);
+        recyclerViewActiveOrders.setLayoutManager(layoutManager1);
+        adapterActiveOrder = new AdapterActiveOrder(MainActivity.this);
+        recyclerViewActiveOrders.setAdapter(adapterActiveOrder);
     }
 
 
@@ -289,7 +302,7 @@ public class MainActivity extends AppCompatActivity
                 case TRADE_WALLET_PRICE:
                     List<WalletItem> listwallets = new ArrayList<>();
                     listwallets =  (ArrayList<WalletItem>) intentE.getSerializableExtra(MarketTickerWatcher.KEY_WALLET_DETAILS);
-                    if(listwallets!=null && listwallets.size()>0 && recyclerViewLogs!=null){
+                    if(listwallets!=null && listwallets.size()>0 && recyclerViewWalletBalance!=null){
                         adapterWalletBalance.setWalletItems(listwallets);
                         adapterWalletBalance.notifyDataSetChanged();
                         Calendar c = Calendar.getInstance();
@@ -297,7 +310,14 @@ public class MainActivity extends AppCompatActivity
                     }
                     break;
                 case TRADE_ACTIVE_ORDERS:
-
+                    List<ActiveOrder> activeOrders = new ArrayList<>();
+                    activeOrders =  (ArrayList<ActiveOrder>) intentE.getSerializableExtra(MarketTickerWatcher.KEY_ACTIVE_ORDERS);
+                    if(activeOrders!=null && activeOrders.size()>0 && recyclerViewActiveOrders!=null){
+                        adapterActiveOrder.setWalletItems(activeOrders);
+                        adapterActiveOrder.notifyDataSetChanged();
+                        Calendar c = Calendar.getInstance();
+                        textViewOrder.setText("Orders - "+sdf.format(c.getTime()));
+                    }
                     break;
                 case TRADE_RECEIVER_PRICE:
                     HashMap<String, SymbolDetails> symbolDetails = new HashMap<>();

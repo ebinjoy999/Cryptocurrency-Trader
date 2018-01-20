@@ -7,6 +7,7 @@ import com.robotrader.ebinjoy999.robotrader.MainActivity;
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 import com.robotrader.ebinjoy999.robotrader.model.WalletItem;
+import com.robotrader.ebinjoy999.robotrader.model.activeorders.ActiveOrder;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -27,7 +28,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
   APIManager apiManager;
   SharedPreferenceManagerC sharedPreferenceManagerC;
   Context ct;
-  final static int MAX_RESPOMSE_TO_START_ALGORITHM = 3;
+  final static int MAX_RESPOMSE_TO_START_ALGORITHM = 4;
 
   Boolean runningForLivePrice  = false;
   ArrayList<String> logList;
@@ -81,12 +82,25 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
     public static final String KEY_SYMBOL_DETAILS = "KEY_SYMBOL_DETAILS";
     public static final String KEY_WALLET_DETAILS = "KEY_WALLET_DETAILS";
+    public static final String KEY_ACTIVE_ORDERS = "KEY_ACTIVE_ORDERS";
     public static final String KEY_LOGS = "KEY_LOGS";
     HashMap<String, SymbolDetails> symbolDetails;
     @Override
     public void onAPILoadSuccess(String REQUEST_TYPE, String message, Object jsonResult) {
         sentBrodcast("API "+ (jsonResult==null? "JSON out null -":"Success -")+REQUEST_TYPE, MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
        switch (REQUEST_TYPE){
+
+           case APIManager.REQUEST_ACTIVE_ORDERS:
+               if( (jsonResult instanceof List) && ((List<ActiveOrder>) jsonResult).size()>= 0) {
+                   List<ActiveOrder> orders  = (List<ActiveOrder>) jsonResult;
+                   sentBrodcast(orders, MainActivity.TRADE_WALLET_PRICE,KEY_WALLET_DETAILS);
+                   addToResponse(APIManager.REQUEST_ACTIVE_ORDERS,orders);
+               }else {
+                   cancelCurrentExecution();
+               }
+                   break;
+
+
            case APIManager.REQUEST_GET_SYMBOLS:
                  if( (jsonResult instanceof List) && ((List<Symbol>) jsonResult).size()> 0 && ((List<Symbol>) jsonResult).get(0) instanceof Symbol) {
                      sharedPreferenceManagerC.saveSymbolDetailsSharedPref(ct,((List<Symbol>) jsonResult));
