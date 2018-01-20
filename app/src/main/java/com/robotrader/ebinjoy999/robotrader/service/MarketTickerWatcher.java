@@ -27,7 +27,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
   APIManager apiManager;
   SharedPreferenceManagerC sharedPreferenceManagerC;
   Context ct;
-  final static int MAX_RESPOMSE_TO_START_ALGORITHM = 4;
+  final static int MAX_RESPOMSE_TO_START_ALGORITHM = 3;
 
   Boolean runningForLivePrice  = false;
   ArrayList<String> logList;
@@ -42,9 +42,11 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
     public void intializeSymbolDetailsAndGetLivePrice() {
         runningForLivePrice = true;
+        sentBrodcast("------------------------------------------------------------", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
         if(sharedPreferenceManagerC.checkIsSymbolDetailsInLocalValid()){
             List<Symbol> symbols = sharedPreferenceManagerC.getSymbolsDetailsSharedPref(ct);
             getLivePrice(symbols);
+            addToResponse(APIManager.REQUEST_GET_SYMBOLS,symbols);
         }else apiManager.getResponseAsJavaModel(APIManager.REQUEST_GET_SYMBOLS,null);
 
 
@@ -78,6 +80,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
 
     public static final String KEY_SYMBOL_DETAILS = "KEY_SYMBOL_DETAILS";
+    public static final String KEY_WALLET_DETAILS = "KEY_WALLET_DETAILS";
     public static final String KEY_LOGS = "KEY_LOGS";
     HashMap<String, SymbolDetails> symbolDetails;
     @Override
@@ -115,6 +118,8 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
            case APIManager.REQUEST_POST_WALLET:
                List<WalletItem> walletItems = new ArrayList<>();
                if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<Object>) jsonResult).get(0) instanceof WalletItem) {
+                   walletItems = (List<WalletItem>) jsonResult;
+                   sentBrodcast(walletItems, MainActivity.TRADE_WALLET_PRICE,KEY_WALLET_DETAILS);
                    addToResponse(APIManager.REQUEST_POST_WALLET,walletItems);
                }else {
                    cancelCurrentExecution();

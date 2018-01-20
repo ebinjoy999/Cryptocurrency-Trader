@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_margin="4dp"
+    android:weightSum="4"
+
+    >
+
+    <TextView
+        android:lines="1"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:textColor="@color/text_secondary_dark"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewCurrency"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Currency" />
+
+    <TextView
+        android:lines="1"
+        android:gravity="center"
+        android:textColor="@color/text_secondary_dark"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Type" />
+
+    <TextView
+        android:id="@+id/textViewAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:lines="1"
+        android:text="Amount"
+        android:textColor="@color/text_secondary_dark"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:lines="1"
+        android:gravity="center"
+        android:textColor="@color/text_green"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:id="@+id/textViewAvailable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Available" />
+
+
+</LinearLayout>

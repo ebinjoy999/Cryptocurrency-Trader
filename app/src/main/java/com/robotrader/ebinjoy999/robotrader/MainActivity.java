@@ -27,8 +27,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.robotrader.ebinjoy999.robotrader.adapter.AdapterRoboLogs;
+import com.robotrader.ebinjoy999.robotrader.adapter.AdapterWalletBalance;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 import com.robotrader.ebinjoy999.robotrader.adapter.AdapterNavRecyclerView;
+import com.robotrader.ebinjoy999.robotrader.model.WalletItem;
 import com.robotrader.ebinjoy999.robotrader.service.MarketTickerWatcher;
 import com.robotrader.ebinjoy999.robotrader.service.TraderMainService;
 
@@ -36,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.spinner) Spinner spinnerExchange;
     @BindView(R.id.recyclerViewActiveOrders) RecyclerView recyclerViewActiveOrders;
     @BindView(R.id.recyclerViewWalletBalance) RecyclerView recyclerViewWalletBalance;
+    @BindView(R.id.textViewUpdatedWallettime) TextView textViewUpdatedWallettime;
+    @BindView(R.id.textViewOrder) TextView textViewOrder;
     Intent intent;
     TraderReceiver traderReceiver;
     @Override
@@ -65,7 +70,10 @@ public class MainActivity extends AppCompatActivity
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(MainActivity.TRADE_RECEIVER_PRICE);
 
+        IntentFilter intentFilter2 = new IntentFilter();
+        intentFilter.addAction(MainActivity.TRADE_WALLET_PRICE);
 
+        registerReceiver(traderReceiver, intentFilter2);
         registerReceiver(traderReceiver, intentFilter1);
         registerReceiver(traderReceiver, intentFilter);
 
@@ -83,9 +91,17 @@ public class MainActivity extends AppCompatActivity
         setUPDrawer();
         setListners();
         setUpBottumSheetLog();
+        setUpMainView();
     }
 
-
+    AdapterWalletBalance adapterWalletBalance;
+    private void setUpMainView() {
+        recyclerViewWalletBalance.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerViewWalletBalance.setLayoutManager(layoutManager);
+        adapterWalletBalance = new AdapterWalletBalance(MainActivity.this);
+        recyclerViewWalletBalance.setAdapter(adapterWalletBalance);
+    }
 
 
     private void setListners() {
@@ -271,7 +287,14 @@ public class MainActivity extends AppCompatActivity
             // TODO Auto-generated method stub
             switch( intentE.getAction()){
                 case TRADE_WALLET_PRICE:
-
+                    List<WalletItem> listwallets = new ArrayList<>();
+                    listwallets =  (ArrayList<WalletItem>) intentE.getSerializableExtra(MarketTickerWatcher.KEY_WALLET_DETAILS);
+                    if(listwallets!=null && listwallets.size()>0 && recyclerViewLogs!=null){
+                        adapterWalletBalance.setWalletItems(listwallets);
+                        adapterWalletBalance.notifyDataSetChanged();
+                        Calendar c = Calendar.getInstance();
+                        textViewUpdatedWallettime.setText("Wallet - "+sdf.format(c.getTime()));
+                    }
                     break;
                 case TRADE_ACTIVE_ORDERS:
 

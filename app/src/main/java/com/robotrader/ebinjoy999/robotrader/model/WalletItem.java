@@ -8,7 +8,9 @@ package com.robotrader.ebinjoy999.robotrader.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class WalletItem {
+import java.io.Serializable;
+
+public class WalletItem implements Serializable {
 
     @SerializedName("type")
     @Expose

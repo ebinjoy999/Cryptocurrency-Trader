@@ -36,6 +36,7 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
+        android:scrollbars="vertical"
         android:id="@+id/recyclerViewLogs"
         android:gravity="center"
         android:layout_width="match_parent"

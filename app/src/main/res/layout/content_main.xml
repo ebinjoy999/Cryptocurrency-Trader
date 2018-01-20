@@ -1,20 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:weightSum="2"
+    android:layout_marginBottom="40dp"
+    android:weightSum="3"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.robotrader.ebinjoy999.robotrader.MainActivity">
-<android.support.v7.widget.RecyclerView
-    android:id="@+id/recyclerViewActiveOrders"
-    android:layout_weight="1"
-    android:layout_width="match_parent"
-    android:layout_height="0dp"></android.support.v7.widget.RecyclerView>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerViewWalletBalance"
+    <RelativeLayout
         android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="0dp"></android.support.v7.widget.RecyclerView>
+        android:layout_height="0dp">
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <View
+            android:background="@color/text_secondary_dark"
+            android:id="@+id/placeHolder1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <TextView
+            android:layout_below="@id/placeHolder1"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:id="@+id/textViewOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Active orders - no updates-" />
+<android.support.v7.widget.RecyclerView
+    android:layout_below="@+id/textViewOrder"
+    android:id="@+id/recyclerViewActiveOrders"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+        <View
+            android:background="@color/text_secondary_dark"
+            android:id="@+id/placeHolder"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+        <TextView
+            android:layout_below="@id/placeHolder"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:id="@+id/textViewUpdatedWallettime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wallet - no updates-" />
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@+id/textViewUpdatedWallettime"
+        android:id="@+id/recyclerViewWalletBalance"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
 </LinearLayout>
