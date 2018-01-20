@@ -32,7 +32,9 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
 
   Boolean runningForLivePrice  = false;
-    ArrayList<String> logList;
+  ArrayList<String> logList;
+  HashMap<String, Object> responsesFromServer = new HashMap<>();
+
     MarketTickerWatcher(Context ct){
         logList = new ArrayList<>();
        apiManager = new APIManager(MarketTickerWatcher.this,ct);
@@ -46,6 +48,8 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
             List<Symbol> symbols = sharedPreferenceManagerC.getSymbolsDetailsSharedPref(ct);
             getLivePrice(symbols);
         }else apiManager.getResponseAsJavaModel(APIManager.REQUEST_GET_SYMBOLS,null);
+
+
     }
 
     private void getLivePrice(List<Symbol> symbols) {
@@ -54,11 +58,15 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
             for (Symbol symbol : symbols) {
                 stringBuilder.append(",t" + symbol.getPair().toUpperCase());
             }
+
             final String query = stringBuilder.toString().substring(1, stringBuilder.toString().length());
             apiManager.getResponseAsJavaModel(APIManager.REQUEST_GET_TICKERS,
                     new HashMap<String, Object>() {{
                         put(APIManager.KEY_REQUEST_QUERY_PARAMS, query);
                     }});
+            apiManager.getResponseAsJavaModel(APIManager.REQUEST_POST_WALLET,null);
+            apiManager.getResponseAsJavaModel(APIManager.REQUEST_ACTIVE_ORDERS,null);
+
         }else {
 
         }
@@ -96,8 +104,9 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                    Intent intent = new Intent();
                    intent.setAction(MainActivity.TRADE_RECEIVER_PRICE);
                    intent.putExtra(KEY_SYMBOL_DETAILS, symbolDetails);
+                   addToResponse(APIManager.REQUEST_GET_TICKERS,symbolDetails);
                    ct.sendBroadcast(intent);
-                   apiManager.getResponseAsJavaModel(APIManager.REQUEST_POST_WALLET,null);
+
                }else {
 
                }
@@ -106,12 +115,17 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
            case APIManager.REQUEST_POST_WALLET:
                List<WalletItem> walletItems = new ArrayList<>();
                if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<Object>) jsonResult).get(0) instanceof WalletItem) {
+                   addToResponse(APIManager.REQUEST_POST_WALLET,walletItems);
                    intaiateAlogorithm(symbolDetails, walletItems);
                }
 
 
                break;
        }
+    }
+
+    private void addToResponse(String key,Object symbolDetails) {
+        this.responsesFromServer.put(key,symbolDetails);
     }
 
     private void intaiateAlogorithm(HashMap<String, SymbolDetails> symbolDetails, List<WalletItem> walletItems) {

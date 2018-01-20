@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.spinner) Spinner spinnerExchange;
+    @BindView(R.id.recyclerViewActiveOrders) RecyclerView recyclerViewActiveOrders;
+    @BindView(R.id.recyclerViewWalletBalance) RecyclerView recyclerViewWalletBalance;
     Intent intent;
     TraderReceiver traderReceiver;
     @Override
