@@ -2,13 +2,13 @@ package com.robotrader.ebinjoy999.robotrader.service;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SyncAdapterType;
 
 import com.robotrader.ebinjoy999.robotrader.MainActivity;
 import com.robotrader.ebinjoy999.robotrader.model.Symbol;
 import com.robotrader.ebinjoy999.robotrader.model.SymbolDetails;
 import com.robotrader.ebinjoy999.robotrader.model.WalletItem;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import retrofit.APIManager;
-import retrofit.ApiClient;
-import retrofit.ApiInterface;
 import retrofit.InterfaceAPIManager;
 import tools.SharedPreferenceManagerC;
 
@@ -29,7 +27,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
   APIManager apiManager;
   SharedPreferenceManagerC sharedPreferenceManagerC;
   Context ct;
-
+  final static int MAX_RESPOMSE_TO_START_ALGORITHM = 4;
 
   Boolean runningForLivePrice  = false;
   ArrayList<String> logList;
@@ -58,7 +56,6 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
             for (Symbol symbol : symbols) {
                 stringBuilder.append(",t" + symbol.getPair().toUpperCase());
             }
-
             final String query = stringBuilder.toString().substring(1, stringBuilder.toString().length());
             apiManager.getResponseAsJavaModel(APIManager.REQUEST_GET_TICKERS,
                     new HashMap<String, Object>() {{
@@ -71,25 +68,33 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
         }
     }
+    private void initiateAlgorithm(HashMap<String, Object> responsesFromServer) {
+
+
+
+
+        cancelCurrentExecution();
+    }
+
 
     public static final String KEY_SYMBOL_DETAILS = "KEY_SYMBOL_DETAILS";
     public static final String KEY_LOGS = "KEY_LOGS";
     HashMap<String, SymbolDetails> symbolDetails;
     @Override
     public void onAPILoadSuccess(String REQUEST_TYPE, String message, Object jsonResult) {
-        addLogs("API "+ (jsonResult==null? "JSON out null -":"Success -")+REQUEST_TYPE);
+        sentBrodcast("API "+ (jsonResult==null? "JSON out null -":"Success -")+REQUEST_TYPE, MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
        switch (REQUEST_TYPE){
            case APIManager.REQUEST_GET_SYMBOLS:
                  if( (jsonResult instanceof List) && ((List<Symbol>) jsonResult).size()> 0 && ((List<Symbol>) jsonResult).get(0) instanceof Symbol) {
                      sharedPreferenceManagerC.saveSymbolDetailsSharedPref(ct,((List<Symbol>) jsonResult));
                      getLivePrice(((List<Symbol>) jsonResult));
+                     addToResponse(APIManager.REQUEST_GET_SYMBOLS,jsonResult);
                  }else {
-
+                     cancelCurrentExecution();
                  }
                break;
 
            case APIManager.REQUEST_GET_TICKERS:  //Got live price
-               runningForLivePrice = false;
                if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<ArrayList>) jsonResult).get(0) instanceof List) {
                   symbolDetails = new HashMap<>();
                    for(ArrayList arrayListDetail :  ((List<ArrayList>) jsonResult)){
@@ -100,15 +105,10 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                                Float.parseFloat(arrayListDetail.get(7).toString()),Float.parseFloat(arrayListDetail.get(8).toString()),Float.parseFloat(arrayListDetail.get(9).toString()),
                                Float.parseFloat(arrayListDetail.get(10).toString())) );
                    }
-//                  int n =  symbolDetails.size();
-                   Intent intent = new Intent();
-                   intent.setAction(MainActivity.TRADE_RECEIVER_PRICE);
-                   intent.putExtra(KEY_SYMBOL_DETAILS, symbolDetails);
+                   sentBrodcast(symbolDetails, MainActivity.TRADE_RECEIVER_PRICE,KEY_SYMBOL_DETAILS);
                    addToResponse(APIManager.REQUEST_GET_TICKERS,symbolDetails);
-                   ct.sendBroadcast(intent);
-
                }else {
-
+                   cancelCurrentExecution();
                }
                break;
 
@@ -116,21 +116,25 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                List<WalletItem> walletItems = new ArrayList<>();
                if( (jsonResult instanceof List) && ((List<Object>) jsonResult).size()> 0 && ((List<Object>) jsonResult).get(0) instanceof WalletItem) {
                    addToResponse(APIManager.REQUEST_POST_WALLET,walletItems);
-                   intaiateAlogorithm(symbolDetails, walletItems);
+               }else {
+                   cancelCurrentExecution();
                }
 
 
                break;
        }
+
+       if(responsesFromServer.size()==MAX_RESPOMSE_TO_START_ALGORITHM)
+           initiateAlgorithm(responsesFromServer);
     }
+
+    private void cancelCurrentExecution() {
+        this.runningForLivePrice = false; //responsesFromServer size  never got MAX_RESPOMSE_TO_START_ALGORITHM so cancelling
+    }
+
 
     private void addToResponse(String key,Object symbolDetails) {
         this.responsesFromServer.put(key,symbolDetails);
-    }
-
-    private void intaiateAlogorithm(HashMap<String, SymbolDetails> symbolDetails, List<WalletItem> walletItems) {
-
-
     }
 
 
@@ -138,22 +142,29 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
     @Override
     public void onAPILoadFailed(String REQUEST_TYPE, String message, Object jsonResult) {
        //Add logs
-       addLogs("API failed -"+REQUEST_TYPE);
+       sentBrodcast("API failed -"+REQUEST_TYPE, MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
 
         switch (REQUEST_TYPE) {
-            case APIManager.REQUEST_GET_SYMBOLS: runningForLivePrice = false;
+            case APIManager.REQUEST_GET_SYMBOLS: cancelCurrentExecution();
                 break;
-            case APIManager.REQUEST_GET_TICKERS:  runningForLivePrice = false;
+            case APIManager.REQUEST_GET_TICKERS: cancelCurrentExecution();
+                break;
+            case APIManager.REQUEST_POST_WALLET:  cancelCurrentExecution();
+                break;
+            case APIManager.REQUEST_ACTIVE_ORDERS:  cancelCurrentExecution();
                 break;
         }
     }
 
-    private void addLogs(String s) {
-        Calendar c = Calendar.getInstance();
-        logList.add(sdf.format(c.getTime())+" :: "+s);
+
+    private void sentBrodcast(Object data, String action, String KEY_EXTRAS) {
+        if(data instanceof String && action==MainActivity.TRADE_RECEIVER_LOGS) {
+            Calendar c = Calendar.getInstance();
+            logList.add(sdf.format(c.getTime()) + " :: " + data);
+        }
         Intent intent = new Intent();
-        intent.setAction(MainActivity.TRADE_RECEIVER_LOGS);
-        intent.putExtra(KEY_LOGS, logList);
+        intent.setAction(action);
+        intent.putExtra(KEY_EXTRAS,(action==MainActivity.TRADE_RECEIVER_LOGS)? logList :  (Serializable) data);
         ct.sendBroadcast(intent);
     }
 

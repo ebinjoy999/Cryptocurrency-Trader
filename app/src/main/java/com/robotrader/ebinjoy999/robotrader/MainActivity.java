@@ -261,13 +261,21 @@ public class MainActivity extends AppCompatActivity
 
 
     public static final String TRADE_RECEIVER_PRICE = "TRADE_RECEIVER_PRICE";
+    public static final String TRADE_WALLET_PRICE = "TRADE_WALLET_PRICE";
     public static final String TRADE_RECEIVER_LOGS = "TRADE_RECEIVER_LOGS";
+    public static final String TRADE_ACTIVE_ORDERS = "TRADE_ACTIVE_ORDERS";
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private class TraderReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context arg0, Intent intentE) {
             // TODO Auto-generated method stub
             switch( intentE.getAction()){
+                case TRADE_WALLET_PRICE:
+
+                    break;
+                case TRADE_ACTIVE_ORDERS:
+
+                    break;
                 case TRADE_RECEIVER_PRICE:
                     HashMap<String, SymbolDetails> symbolDetails = new HashMap<>();
                     symbolDetails = (HashMap<String, SymbolDetails>)intentE.getSerializableExtra(MarketTickerWatcher.KEY_SYMBOL_DETAILS);
@@ -278,7 +286,6 @@ public class MainActivity extends AppCompatActivity
                         textViewUpdated.setText(sdf.format(c.getTime()));
                     }
                     break;
-
                 case TRADE_RECEIVER_LOGS:
                     ArrayList<String> logList = new ArrayList<>();
                     logList =  (ArrayList<String>) intentE.getSerializableExtra(MarketTickerWatcher.KEY_LOGS);
