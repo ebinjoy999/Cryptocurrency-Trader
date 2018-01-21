@@ -124,7 +124,9 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
                     }else{
 
                     }
-                }else  sentBrodcast("Monitoring currency M:"+priceMid+" C:"+symbolDetailsNew.getBID()+" "+currency +" Algo no action!", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
+                }else  {
+                    sentBrodcast("Monitoring currency M:"+priceMid+" C:"+symbolDetailsNew.getBID()+" "+currency +" Algo no action!", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
+                }
 
             }
         }
