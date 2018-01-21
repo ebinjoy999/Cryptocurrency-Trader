@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit.APIManager;
 import retrofit.InterfaceAPIManager;
@@ -43,6 +44,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
     public void intializeSymbolDetailsAndGetLivePrice() {
         runningForLivePrice = true;
+        responsesFromServer = new HashMap<>();
         sentBrodcast("------------------------------------------------------------", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
         if(sharedPreferenceManagerC.checkIsSymbolDetailsInLocalValid()){
             List<Symbol> symbols = sharedPreferenceManagerC.getSymbolsDetailsSharedPref(ct);
@@ -71,10 +73,28 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
         }
     }
+
+
+    String[] monitorCryptos = {"xrp"};
     private void initiateAlgorithm(HashMap<String, Object> responsesFromServer) {
+        List<Symbol> symbols = (List<Symbol>) responsesFromServer.get(APIManager.REQUEST_GET_SYMBOLS);
+
+        List<ActiveOrder> orders = (List<ActiveOrder>) responsesFromServer.get(APIManager.REQUEST_ACTIVE_ORDERS);
+        List<WalletItem> walletItems = (List<WalletItem>) responsesFromServer.get(APIManager.REQUEST_POST_WALLET);
+        HashMap<String, SymbolDetails> symbolDetails = (HashMap<String, SymbolDetails>) responsesFromServer.get(APIManager.REQUEST_GET_TICKERS);
 
 
+        Map<String,WalletItem> walletsMap = new HashMap<String,WalletItem>();
+        for (WalletItem walletItem : walletItems) walletsMap.put(walletItem.getCurrency(),walletItem);
 
+        for(String currency : monitorCryptos){
+            sentBrodcast("Monitoring currency "+currency, MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
+            SymbolDetails symbolDetailsNew = symbolDetails.get("t"+currency.toUpperCase()+"USD");
+            WalletItem walletItem = walletsMap.get(currency);
+            if(walletItem!=null && symbolDetailsNew!=null){
+                   //Here add logic to buy or Sell
+            }
+        }
 
         cancelCurrentExecution();
     }
