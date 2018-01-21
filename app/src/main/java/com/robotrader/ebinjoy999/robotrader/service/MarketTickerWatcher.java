@@ -76,9 +76,8 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
 
     String[] monitorCryptos = {"xrp"};
-    List<Float> xrpFloats = new ArrayList<>();
     Float XRP_ACTION_PRICE = 1.40f;
-
+    Float xrp_hit_price = 0.0f;
     private void initiateAlgorithm(HashMap<String, Object> responsesFromServer) {
         List<Symbol> symbols = (List<Symbol>) responsesFromServer.get(APIManager.REQUEST_GET_SYMBOLS);
         List<ActiveOrder> orders = (List<ActiveOrder>) responsesFromServer.get(APIManager.REQUEST_ACTIVE_ORDERS);
@@ -102,16 +101,24 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
                 float smallIntegralforCheck =  (symbolDetailsNew.getHIGH()-symbolDetailsNew.getLOW())/10;
                 float PROFIT_MARGIN = .03f;
+                Float previosSellPrice = sharedPreferenceManagerC.getKeyToSharedPreferencFloat(currency+"sell_price");
+                Float previosBuylPrice = sharedPreferenceManagerC.getKeyToSharedPreferencFloat(currency+"buy_price");
 
-                if( haveCryptoCurrency && (priceMid<symbolDetailsNew.getBID())){
+                if(   (haveCryptoCurrency &&(previosSellPrice==0.0f) && (priceMid<symbolDetailsNew.getBID()))
+                          || ((previosSellPrice-PROFIT_MARGIN)>= symbolDetailsNew.getBID()) ){
                     //Decision about sell
                     sentBrodcast("Monitoring currency M:"+priceMid+" C:"+symbolDetailsNew.getBID()+" "+currency +" Decision about sell", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
 
-                } else if( !haveCryptoCurrency && (priceMid>=(symbolDetailsNew.getBID()-smallIntegralforCheck) )){
+                } else if( !haveCryptoCurrency && (priceMid>=(symbolDetailsNew.getBID()-smallIntegralforCheck)) ){
                     //Decision about buy
                     sentBrodcast("Monitoring currency M:"+priceMid+" C:"+symbolDetailsNew.getBID()+" "+currency +" Decision about buy", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
+
+                    Float triggerPrice = (XRP_ACTION_PRICE==0)? priceMid : XRP_ACTION_PRICE;
+                    if(previosSellPrice!=0) triggerPrice = previosSellPrice; //Override
+
                     if(DecideCellOrBuy.decideIsNeedsBuy(smallIntegralforCheck,PROFIT_MARGIN,
-                            XRP_ACTION_PRICE,priceMid,xrpFloats,symbolDetailsNew.getBID())){
+                            priceMid,symbolDetailsNew.getBID()
+                            )){
 
 
                     }else{

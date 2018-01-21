@@ -57,6 +57,15 @@ public class SharedPreferenceManagerC {
        return mPrefs.getString(key, "");
     }
 
+    public Float getKeyToSharedPreferencFloat(String key){
+        return mPrefs.getFloat(key, 0.0f);
+    }
+
+    public void saveKeyToSharedPreferencFloat(String key, Float value){
+        prefsEditor.putFloat(key, value);
+        prefsEditor.commit();
+    }
+
     public  void saveSymbolDetailsSharedPref(Context mContext, List<Symbol> symbols){
         Gson gson = new Gson();
         String json = gson.toJson(symbols);
