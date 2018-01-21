@@ -76,23 +76,48 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
 
 
     String[] monitorCryptos = {"xrp"};
+    List<Float> xrpFloats = new ArrayList<>();
+    Float XRP_ACTION_PRICE = 1.40f;
+
     private void initiateAlgorithm(HashMap<String, Object> responsesFromServer) {
         List<Symbol> symbols = (List<Symbol>) responsesFromServer.get(APIManager.REQUEST_GET_SYMBOLS);
-
         List<ActiveOrder> orders = (List<ActiveOrder>) responsesFromServer.get(APIManager.REQUEST_ACTIVE_ORDERS);
         List<WalletItem> walletItems = (List<WalletItem>) responsesFromServer.get(APIManager.REQUEST_POST_WALLET);
         HashMap<String, SymbolDetails> symbolDetails = (HashMap<String, SymbolDetails>) responsesFromServer.get(APIManager.REQUEST_GET_TICKERS);
 
 
         Map<String,WalletItem> walletsMap = new HashMap<String,WalletItem>();
-        for (WalletItem walletItem : walletItems) walletsMap.put(walletItem.getCurrency(),walletItem);
+        // Only deal with EXChange==============
+        for (WalletItem walletItem : walletItems)
+            if(walletItem.getType().equalsIgnoreCase("exchange"))walletsMap.put(walletItem.getCurrency(),walletItem);
 
         for(String currency : monitorCryptos){
             sentBrodcast("Monitoring currency "+currency, MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
             SymbolDetails symbolDetailsNew = symbolDetails.get("t"+currency.toUpperCase()+"USD");
             WalletItem walletItem = walletsMap.get(currency);
             if(walletItem!=null && symbolDetailsNew!=null){
-                   //Here add logic to buy or Sell
+                boolean haveCryptoCurrency =  DecideCellOrBuy.decideHaveCryptoCurrency(Float.parseFloat(walletItem.getAvailable()),
+                        symbolDetailsNew.getBID());
+                float priceMid  =  (symbolDetailsNew.getHIGH()+symbolDetailsNew.getLOW())/2;
+
+                float smallIntegralforCheck =  (symbolDetailsNew.getHIGH()-symbolDetailsNew.getLOW())/10;
+                float PROFIT_MARGIN = .03f;
+
+                if( haveCryptoCurrency && (priceMid<symbolDetailsNew.getBID())){
+                    //Decision about sell
+                    sentBrodcast("Monitoring currency M:"+priceMid+" C:"+symbolDetailsNew.getBID()+" "+currency +" Decision about sell", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
+
+                } else if( !haveCryptoCurrency && (priceMid>=(symbolDetailsNew.getBID()-smallIntegralforCheck) )){
+                    //Decision about buy
+                    sentBrodcast("Monitoring currency M:"+priceMid+" C:"+symbolDetailsNew.getBID()+" "+currency +" Decision about buy", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
+                    if(DecideCellOrBuy.decideIsNeedsBuy(smallIntegralforCheck,PROFIT_MARGIN,
+                            XRP_ACTION_PRICE,priceMid,xrpFloats,symbolDetailsNew.getBID())){
+
+
+                    }else{
+
+                    }
+                }else  sentBrodcast("Monitoring currency M:"+priceMid+" C:"+symbolDetailsNew.getBID()+" "+currency +" Algo no action!", MainActivity.TRADE_RECEIVER_LOGS,KEY_LOGS);
 
             }
         }
@@ -112,9 +137,9 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
        switch (REQUEST_TYPE){
 
            case APIManager.REQUEST_ACTIVE_ORDERS:
-               if( (jsonResult instanceof List) && ((List<ActiveOrder>) jsonResult).size()>= 0) {
+               if( (jsonResult instanceof List) && ((List<ActiveOrder>) jsonResult).size() >= 0) {
                    List<ActiveOrder> orders  = (List<ActiveOrder>) jsonResult;
-                   sentBrodcast(orders, MainActivity.TRADE_WALLET_PRICE,KEY_WALLET_DETAILS);
+                   sentBrodcast(orders, MainActivity.TRADE_ACTIVE_ORDERS,KEY_ACTIVE_ORDERS);
                    addToResponse(APIManager.REQUEST_ACTIVE_ORDERS,orders);
                }else {
                    cancelCurrentExecution();

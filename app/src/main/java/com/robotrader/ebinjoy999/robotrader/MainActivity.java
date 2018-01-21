@@ -302,7 +302,7 @@ public class MainActivity extends AppCompatActivity
                 case TRADE_WALLET_PRICE:
                     List<WalletItem> listwallets = new ArrayList<>();
                     listwallets =  (ArrayList<WalletItem>) intentE.getSerializableExtra(MarketTickerWatcher.KEY_WALLET_DETAILS);
-                    if(listwallets!=null && listwallets.size()>0 && recyclerViewWalletBalance!=null){
+                    if(listwallets!=null && listwallets.size()>=0 && recyclerViewWalletBalance!=null){
                         adapterWalletBalance.setWalletItems(listwallets);
                         adapterWalletBalance.notifyDataSetChanged();
                         Calendar c = Calendar.getInstance();
@@ -312,7 +312,7 @@ public class MainActivity extends AppCompatActivity
                 case TRADE_ACTIVE_ORDERS:
                     List<ActiveOrder> activeOrders = new ArrayList<>();
                     activeOrders =  (ArrayList<ActiveOrder>) intentE.getSerializableExtra(MarketTickerWatcher.KEY_ACTIVE_ORDERS);
-                    if(activeOrders!=null && activeOrders.size()>0 && recyclerViewActiveOrders!=null){
+                    if(activeOrders!=null && activeOrders.size()>=0 && recyclerViewActiveOrders!=null){
                         adapterActiveOrder.setWalletItems(activeOrders);
                         adapterActiveOrder.notifyDataSetChanged();
                         Calendar c = Calendar.getInstance();
