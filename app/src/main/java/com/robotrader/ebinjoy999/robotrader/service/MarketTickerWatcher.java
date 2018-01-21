@@ -93,6 +93,7 @@ public class MarketTickerWatcher implements InterfaceAPIManager{
             WalletItem walletItem = walletsMap.get(currency);
             if(walletItem!=null && symbolDetailsNew!=null){
                    //Here add logic to buy or Sell
+
             }
         }
 
