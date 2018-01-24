@@ -8,6 +8,8 @@ Basic useful feature list:
  * Scan QR code and fetch API keys.
  * Market watcher service runs small interval of time.
 
-
+Caution! Repo under development
 
 ![test image size](/images/a.png)
+
+![test image size](/images/d.png)
