@@ -8,7 +8,13 @@ Basic useful feature list:
  * Scan QR code and fetch API keys.
  * Market watcher service runs small interval of time.
 
-Caution! Repo under development
+Caution! Repo under development, More exchanges will added soon.
+
+
+Used libraries
+ * QR Reader - com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3@aar
+ * Network library - com.squareup.retrofit2:retrofit:2.3.0
+   
 
 ![test image size](/images/a.png)
 
